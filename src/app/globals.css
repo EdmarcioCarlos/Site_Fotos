@@ -77,8 +77,19 @@ h3 {
 }
 
 /* Cabeçalho e rodapé */
+.top-bar {
+  padding-top: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: right;
+}
+
+.top-bar a {
+  text-underline-offset: 2px;
+}
+
 .site-header {
-  padding-block: 16px;
+  padding-block: 8px 16px;
   border-bottom: 1px solid var(--line);
 }
 

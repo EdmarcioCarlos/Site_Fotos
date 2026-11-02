@@ -9,6 +9,11 @@ const INSTAGRAM_URL = "https://www.instagram.com/photopro.ms/";
 export function SiteShell({ children }: { children: React.ReactNode }) {
   return (
     <>
+      <div className="top-bar container">
+        <Link href="/admin" prefetch={false}>
+          Painel do fotógrafo
+        </Link>
+      </div>
       <header className="site-header">
         <div className="container">
           <Link href="/" className="brand" aria-label="PhotoPRO, página inicial">

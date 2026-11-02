@@ -14,9 +14,10 @@ const initialState: EventFormState = {};
 type Props = {
   action: (state: EventFormState, form: FormData) => Promise<EventFormState>;
   event?: EventRow;
+  uploadEnabled: boolean;
 };
 
-export function EventForm({ action, event }: Props) {
+export function EventForm({ action, event, uploadEnabled }: Props) {
   const [state, formAction, pending] = useActionState(action, initialState);
   const [name, setName] = useState(event?.name ?? "");
   const [description, setDescription] = useState(event?.description ?? "");
@@ -86,10 +87,17 @@ export function EventForm({ action, event }: Props) {
           type="file"
           accept="image/jpeg,image/png,image/webp"
           onChange={(e) => handleBanner(e.target.files?.[0])}
+          disabled={!uploadEnabled}
         />
         <p className="hint">
           JPG, PNG ou WebP de até {MAX_BANNER_MB} MB. Formato ideal: 1600 × 900 pixels.
         </p>
+        {!uploadEnabled && (
+          <p className="error">
+            O envio de imagens ainda não está configurado: falta conectar o Vercel Blob. Sem ele, não
+            é possível salvar eventos.
+          </p>
+        )}
         <input type="hidden" name="bannerUrl" value={bannerUrl} />
         {uploading && <p className="hint">Enviando imagem...</p>}
         {uploadError && <p className="error">{uploadError}</p>}

@@ -15,7 +15,11 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
       <div className="admin-title">
         <h1>Editar evento</h1>
       </div>
-      <EventForm action={updateEventAction.bind(null, event.id)} event={event} />
+      <EventForm
+        action={updateEventAction.bind(null, event.id)}
+        event={event}
+        uploadEnabled={Boolean(process.env.BLOB_READ_WRITE_TOKEN)}
+      />
     </div>
   );
 }

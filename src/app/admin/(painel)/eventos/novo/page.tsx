@@ -10,7 +10,10 @@ export default async function NewEventPage() {
       <div className="admin-title">
         <h1>Novo evento</h1>
       </div>
-      <EventForm action={createEventAction} />
+      <EventForm
+        action={createEventAction}
+        uploadEnabled={Boolean(process.env.BLOB_READ_WRITE_TOKEN)}
+      />
     </div>
   );
 }
