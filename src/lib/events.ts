@@ -14,15 +14,23 @@ export type EventRow = {
   banner_url: string;
   sales_url: string;
   published: boolean;
+  details: string;
+  hide_ads: boolean;
 };
 
 // event_date em texto: evita que o fuso do servidor mude o dia do evento.
 const COLUMNS = `id, slug, name, description, address, city, event_date::text AS event_date,
-  banner_url, sales_url, published`;
+  banner_url, sales_url, published, details, hide_ads`;
 
 export function listPublishedEvents(): Promise<EventRow[]> {
   return query<EventRow>(
     `SELECT ${COLUMNS} FROM events WHERE published ORDER BY event_date DESC, created_at DESC`,
+  );
+}
+
+export function listEventsForSitemap(): Promise<{ slug: string; updated_at: Date }[]> {
+  return query<{ slug: string; updated_at: Date }>(
+    `SELECT slug, updated_at FROM events WHERE published ORDER BY event_date DESC`,
   );
 }
 
@@ -47,8 +55,9 @@ export async function getEventById(id: string): Promise<EventRow | null> {
 async function insertWithSlug(slug: string, input: EventInput): Promise<EventRow | null> {
   const rows = await query<EventRow>(
     `INSERT INTO events
-       (slug, name, description, address, city, event_date, banner_url, sales_url, published)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+       (slug, name, description, address, city, event_date, banner_url, sales_url, published,
+        details, hide_ads)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
      ON CONFLICT (slug) DO NOTHING
      RETURNING ${COLUMNS}`,
     [
@@ -61,6 +70,8 @@ async function insertWithSlug(slug: string, input: EventInput): Promise<EventRow
       input.bannerUrl,
       input.salesUrl,
       input.published,
+      input.details,
+      input.hideAds,
     ],
   );
   return rows[0] ?? null;
@@ -80,7 +91,8 @@ export async function updateEvent(id: string, input: EventInput): Promise<EventR
   if (!isUuid(id)) return null;
   const rows = await query<EventRow>(
     `UPDATE events SET name = $2, description = $3, address = $4, city = $5, event_date = $6,
-       banner_url = $7, sales_url = $8, published = $9, updated_at = now()
+       banner_url = $7, sales_url = $8, published = $9, details = $10, hide_ads = $11,
+       updated_at = now()
      WHERE id = $1 RETURNING ${COLUMNS}`,
     [
       id,
@@ -92,6 +104,8 @@ export async function updateEvent(id: string, input: EventInput): Promise<EventR
       input.bannerUrl,
       input.salesUrl,
       input.published,
+      input.details,
+      input.hideAds,
     ],
   );
   return rows[0] ?? null;

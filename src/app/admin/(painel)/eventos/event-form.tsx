@@ -26,6 +26,8 @@ export function EventForm({ action, event, uploadEnabled }: Props) {
   const [eventDate, setEventDate] = useState(event?.event_date ?? "");
   const [salesUrl, setSalesUrl] = useState(event?.sales_url ?? "");
   const [published, setPublished] = useState(event?.published ?? false);
+  const [details, setDetails] = useState(event?.details ?? "");
+  const [hideAds, setHideAds] = useState(event?.hide_ads ?? false);
   const [bannerUrl, setBannerUrl] = useState(event?.banner_url ?? "");
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
@@ -176,6 +178,23 @@ export function EventForm({ action, event, uploadEnabled }: Props) {
       </div>
 
       <div className="field">
+        <label htmlFor="details">Texto sobre o evento (opcional)</label>
+        <textarea
+          id="details"
+          name="details"
+          value={details}
+          onChange={(e) => setDetails(e.target.value)}
+          maxLength={LIMITS.details}
+          aria-describedby="details-hint"
+        />
+        <p id="details-hint" className="hint">
+          Conte como foi a cobertura e os destaques. Textos próprios ajudam o evento a aparecer no
+          Google. {details.length} de {LIMITS.details} caracteres.
+        </p>
+        {errors.details && <p className="error">{errors.details}</p>}
+      </div>
+
+      <div className="field">
         <label htmlFor="salesUrl">Link do site de venda das fotos</label>
         <input
           id="salesUrl"
@@ -197,6 +216,16 @@ export function EventForm({ action, event, uploadEnabled }: Props) {
           onChange={(e) => setPublished(e.target.checked)}
         />
         Publicar no site
+      </label>
+
+      <label className="checkbox">
+        <input
+          type="checkbox"
+          name="hideAds"
+          checked={hideAds}
+          onChange={(e) => setHideAds(e.target.checked)}
+        />
+        Sem anúncios na página deste evento (use em eventos de airsoft)
       </label>
 
       <div className="admin-actions">

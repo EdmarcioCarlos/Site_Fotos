@@ -111,6 +111,46 @@ h3 {
   border-radius: 50%;
 }
 
+.header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* Altura reservada para a página não pular quando o anúncio carregar */
+.ad-slot {
+  min-height: 280px;
+  margin-block: 32px;
+  padding-top: 4px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.ad-label {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.text-page {
+  padding-top: 32px;
+}
+
+.text-page h1 {
+  font-size: clamp(1.9rem, 6vw, 3rem);
+  margin-bottom: 18px;
+}
+
+.text-page a:not(.button) {
+  color: var(--white);
+  overflow-wrap: anywhere;
+}
+
+.text-page li {
+  margin-bottom: 8px;
+}
+
 .site-footer {
   margin-top: 56px;
   padding-block: 24px;
@@ -198,6 +238,13 @@ h3 {
 
 .banner-contain img {
   object-fit: contain;
+}
+
+/* Preenche as laterais de fotos fora do formato 16:9 com a própria imagem desfocada */
+.banner-contain img.banner-backdrop {
+  object-fit: cover;
+  filter: blur(24px) brightness(0.55);
+  transform: scale(1.15);
 }
 
 .event-card-body {

@@ -37,6 +37,12 @@ describe("parseEventInput", () => {
     expect(errorsOf({ description: "a".repeat(281) }).description).toBeDefined();
   });
 
+  it("aceita o texto longo vazio e aplica o limite de 5000 caracteres", () => {
+    expect(errorsOf({ details: "" }).details).toBeUndefined();
+    expect(errorsOf({ details: "a".repeat(5000) }).details).toBeUndefined();
+    expect(errorsOf({ details: "a".repeat(5001) }).details).toBeDefined();
+  });
+
   it.each([
     "javascript:alert(1)",
     "http://loja.exemplo.com",
@@ -69,6 +75,24 @@ describe("apoio", () => {
 
   it("formata a data sem depender do fuso", () => {
     expect(formatEventDate("2026-01-01")).toBe("1 de janeiro de 2026");
+  });
+
+  it.each([
+    [
+      "Rua Francisco Augusto Rocha, 150 - Planalto, Belo Horizonte - MG, 31744-002",
+      "Belo Horizonte",
+      "Rua Francisco Augusto Rocha, 150 - Planalto, Belo Horizonte - MG, 31744-002",
+    ],
+    ["Av. Afonso Pena, 100, São Paulo/SP", "Sao Paulo - SP", "Av. Afonso Pena, 100, São Paulo/SP"],
+    ["Rua A, 10, Campo Grande-MS", "campo grande", "Rua A, 10, Campo Grande-MS"],
+    ["Belo Horizonte", "Belo Horizonte", "Belo Horizonte"],
+    ["Estádio Morenão", "Campo Grande - MS", "Estádio Morenão, Campo Grande - MS"],
+    ["Rua Belo Horizonte, 100", "Belo Horizonte", "Rua Belo Horizonte, 100, Belo Horizonte"],
+    ["Rua A, 10, Campo Grande de Cima", "Campo Grande", "Rua A, 10, Campo Grande de Cima, Campo Grande"],
+    ["", "Campo Grande", "Campo Grande"],
+    ["Rua A", "", "Rua A"],
+  ])("monta o local de %s em %s sem repetir a cidade", (address, city, expected) => {
+    expect(locationQuery(address, city)).toBe(expected);
   });
 
   it("monta o mapa sem chave e só quando há endereço", () => {

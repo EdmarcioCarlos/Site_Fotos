@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
 import { Inter, Oswald } from "next/font/google";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const display = Oswald({ subsets: ["latin"], weight: ["300", "400"], variable: "--font-display" });
 const body = Inter({ subsets: ["latin"], variable: "--font-body" });
 
 export const metadata: Metadata = {
-  metadataBase: process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? new URL(`https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`)
-    : undefined,
+  metadataBase: new URL(SITE_URL),
   title: { default: "PhotoPRO | Eventos", template: "%s | PhotoPRO" },
   description: "Encontre o seu evento e acesse as fotos da cobertura da PhotoPRO.",
 };

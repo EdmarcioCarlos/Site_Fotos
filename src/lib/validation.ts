@@ -1,4 +1,4 @@
-export const LIMITS = { name: 120, description: 280, address: 300, city: 100 } as const;
+export const LIMITS = { name: 120, description: 280, details: 5000, address: 300, city: 100 } as const;
 
 export const BLOB_HOST_SUFFIX = ".public.blob.vercel-storage.com";
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -12,6 +12,8 @@ export type EventInput = {
   bannerUrl: string;
   salesUrl: string;
   published: boolean;
+  details: string;
+  hideAds: boolean;
 };
 
 export type FieldErrors = Partial<Record<keyof EventInput, string>>;
@@ -60,6 +62,8 @@ export function parseEventInput(form: FormData): ParseResult<EventInput> {
     bannerUrl: text(form, "bannerUrl"),
     salesUrl: text(form, "salesUrl"),
     published: form.get("published") === "on",
+    details: text(form, "details"),
+    hideAds: form.get("hideAds") === "on",
   };
 
   const errors: FieldErrors = {};
@@ -69,6 +73,7 @@ export function parseEventInput(form: FormData): ParseResult<EventInput> {
 
   set("name", checkLength(data.name, 3, LIMITS.name, "o nome"));
   set("description", checkLength(data.description, 1, LIMITS.description, "a descrição"));
+  set("details", checkLength(data.details, 0, LIMITS.details, "o texto sobre o evento"));
   set("address", checkLength(data.address, 5, LIMITS.address, "o endereço"));
   set("city", checkLength(data.city, 2, LIMITS.city, "a cidade"));
   if (!isRealDate(data.eventDate)) set("eventDate", "Informe uma data válida.");

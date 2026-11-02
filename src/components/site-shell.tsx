@@ -1,10 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-
-const LINKS_URL = "https://linktr.ee/photopro";
-const CONTACT_EMAIL = "marciofotoearte@gmail.com";
-const YOUTUBE_URL = "https://www.youtube.com/@lifesessions_";
-const INSTAGRAM_URL = "https://www.instagram.com/photopro.ms/";
+import { CONTACT_EMAIL, HIRE_URL, INSTAGRAM_URL, LINKS_URL, YOUTUBE_URL } from "@/lib/site";
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
   return (
@@ -19,9 +15,14 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           <Link href="/" className="brand" aria-label="PhotoPRO, página inicial">
             <Image src="/logo.png" alt="" width={64} height={64} priority />
           </Link>
-          <a className="button" href={LINKS_URL} target="_blank" rel="noopener noreferrer">
-            Painéis de trabalho
-          </a>
+          <div className="header-actions">
+            <a className="button" href={LINKS_URL} target="_blank" rel="noopener noreferrer">
+              Meus trabalhos
+            </a>
+            <a className="button button-primary" href={HIRE_URL}>
+              Contratar
+            </a>
+          </div>
         </div>
       </header>
       <main>{children}</main>
@@ -48,6 +49,18 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
               >
                 Instagram
               </a>
+            </li>
+          </ul>
+          <ul className="contact-list">
+            <li>
+              <Link className="text-link" href="/sobre">
+                Sobre
+              </Link>
+            </li>
+            <li>
+              <Link className="text-link" href="/privacidade">
+                Privacidade
+              </Link>
             </li>
           </ul>
           <p>PhotoPRO | Márcio Souza. Fotografia esportiva e social.</p>

@@ -29,6 +29,10 @@ Divulgar os eventos fotografados pela PhotoPRO e levar o visitante ao site exter
 - **Usuários (só `owner`):** criar editor, gerar nova senha, desativar e reativar.
 - **Minha senha:** obrigatória no primeiro acesso.
 
+- **Sobre e Privacidade:** páginas públicas de texto.
+
+O formulário também tem um texto longo opcional (até 5.000 caracteres) e a opção "Sem anúncios" por evento. Os espaços de anúncio ficam invisíveis até o AdSense ser configurado.
+
 A data e a cidade foram acrescentadas aos campos pedidos: a data ordena os eventos, e a cidade aparece nos cartões.
 
 ## Visual
@@ -55,7 +59,7 @@ As páginas públicas usam ISR de 1 hora e são revalidadas na hora a cada alter
 
 ## Fora do escopo
 
-Venda no próprio site, galeria de fotos, 2FA, histórico de alterações, recuperação de senha por e-mail e estatísticas de visitas.
+Venda no próprio site, galeria de fotos, 2FA, histórico de alterações, recuperação de senha por e-mail, estatísticas de visitas e a ativação do AdSense, que depende da aprovação do Google.
 
 ## Limitações conhecidas
 

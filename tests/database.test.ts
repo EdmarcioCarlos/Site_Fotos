@@ -8,8 +8,14 @@ vi.mock("@/lib/db", () => ({
   query: async (text: string, params: unknown[] = []) => (await db.query(text, params)).rows,
 }));
 
-const { createEvent, deleteEvent, getPublishedEventBySlug, listPublishedEvents, updateEvent } =
-  await import("@/lib/events");
+const {
+  createEvent,
+  deleteEvent,
+  getPublishedEventBySlug,
+  listEventsForSitemap,
+  listPublishedEvents,
+  updateEvent,
+} = await import("@/lib/events");
 const { clearAccountFailures, isBlocked, loginLimits, recordFailure } =
   await import("@/lib/rate-limit");
 const { changeOwnPassword, createEditor, findUserByEmail, resetPassword, setUserActive } =
@@ -24,6 +30,8 @@ const input = {
   bannerUrl: "https://abc.public.blob.vercel-storage.com/a.jpg",
   salesUrl: "https://loja.exemplo.com",
   published: true,
+  details: "",
+  hideAds: false,
 };
 
 beforeAll(async () => {
@@ -73,6 +81,27 @@ describe("eventos", () => {
     expect(updated?.slug).toBe(event.slug);
     expect((await deleteEvent(event.id))?.id).toBe(event.id);
     expect(await listPublishedEvents()).toEqual([]);
+  });
+
+  it("guarda o texto longo e a opção sem anúncios", async () => {
+    const event = await createEvent({ ...input, details: "Como foi a final.", hideAds: true });
+    expect(event.details).toBe("Como foi a final.");
+    expect(event.hide_ads).toBe(true);
+    const updated = await updateEvent(event.id, { ...input, details: "Outro texto", hideAds: false });
+    expect(updated?.details).toBe("Outro texto");
+    expect(updated?.hide_ads).toBe(false);
+  });
+
+  it("o mapa do site lista só os eventos publicados", async () => {
+    await createEvent({ ...input, name: "Evento oculto", published: false });
+    const visible = await createEvent(input);
+    expect((await listEventsForSitemap()).map((e) => e.slug)).toEqual([visible.slug]);
+  });
+
+  it("aplicar a estrutura de novo não apaga dados", async () => {
+    const event = await createEvent({ ...input, details: "Mantido" });
+    await db.exec(readFileSync("db/schema.sql", "utf8"));
+    expect((await listPublishedEvents())[0]).toMatchObject({ id: event.id, details: "Mantido" });
   });
 
   it("ignora identificadores inválidos sem consultar o banco", async () => {

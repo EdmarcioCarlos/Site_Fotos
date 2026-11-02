@@ -42,6 +42,17 @@ Em **Settings → Advanced Security**, ative **Secret scanning** e **Push protec
 
 Troque o segredo no serviço de origem primeiro, porque apagar o commit não basta. Depois, atualize o valor na Vercel e no `.env.local`.
 
+## Anúncios (ainda não ativos)
+
+Os espaços estão prontos em `src/components/ad-slot.tsx` e não aparecem enquanto `NEXT_PUBLIC_ADSENSE_CLIENT` estiver vazio. Eles ficam depois do botão de compra, depois do mapa e, na página inicial, entre os eventos, a partir de 3 eventos publicados. Eventos marcados com "Sem anúncios" não exibem os espaços da própria página.
+
+Para ativar depois da aprovação do Google:
+
+1. Migrar a Vercel para o plano Pro e usar domínio próprio.
+2. Incluir o script e os blocos do Google e liberar os domínios dele na CSP de `next.config.ts`.
+3. Criar `public/ads.txt` com o código da conta.
+4. Atualizar o rodapé e `/privacidade`, que hoje dizem que não há anúncios nem rastreamento, e avaliar o aviso de consentimento exigido pela LGPD.
+
 ## Tarefas comuns
 
 | Tarefa | Como fazer |

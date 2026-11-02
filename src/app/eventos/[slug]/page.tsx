@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AdSlot } from "@/components/ad-slot";
 import { SiteShell } from "@/components/site-shell";
-import { getPublishedEventBySlug } from "@/lib/events";
+import { getPublishedEventBySlug, type EventRow } from "@/lib/events";
 import { formatEventDate } from "@/lib/format";
 import { directionsUrl, locationQuery, mapEmbedUrl } from "@/lib/maps";
+import { SITE_URL } from "@/lib/site";
 
 export const revalidate = 3600;
 
@@ -22,8 +24,31 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: event.name,
     description: event.description,
-    openGraph: { title: event.name, description: event.description, images: [event.banner_url] },
+    alternates: { canonical: `/eventos/${event.slug}` },
+    openGraph: {
+      title: event.name,
+      description: event.description,
+      url: `/eventos/${event.slug}`,
+      siteName: "PhotoPRO",
+      locale: "pt_BR",
+      images: [event.banner_url],
+    },
   };
+}
+
+function eventJsonLd(event: EventRow, place: string): string {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    name: event.name,
+    description: event.description,
+    startDate: event.event_date,
+    image: [event.banner_url],
+    url: `${SITE_URL}/eventos/${event.slug}`,
+    location: { "@type": "Place", name: event.city, address: place },
+  };
+  // Troca "<" para um texto cadastrado não conseguir fechar a tag <script>.
+  return JSON.stringify(data).replace(/</g, "\\u003c");
 }
 
 export default async function EventPage({ params }: Props) {
@@ -35,11 +60,23 @@ export default async function EventPage({ params }: Props) {
 
   return (
     <SiteShell>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: eventJsonLd(event, place) }}
+      />
       <article className="container narrow event-page">
         <Link href="/" className="back-link">
           ← Todos os eventos
         </Link>
         <div className="banner banner-contain">
+          <Image
+            className="banner-backdrop"
+            src={event.banner_url}
+            alt=""
+            fill
+            sizes="96px"
+            aria-hidden
+          />
           <Image
             src={event.banner_url}
             alt={`Banner do evento ${event.name}`}
@@ -62,6 +99,15 @@ export default async function EventPage({ params }: Props) {
           Ver e comprar fotos
         </a>
 
+        {!event.hide_ads && <AdSlot name="evento-apos-botao" />}
+
+        {event.details && (
+          <>
+            <h2 className="section-title">Sobre o evento</h2>
+            <p className="event-description">{event.details}</p>
+          </>
+        )}
+
         <h2 className="section-title">Local</h2>
         <p className="event-meta">{place}</p>
         {mapUrl && (
@@ -83,6 +129,8 @@ export default async function EventPage({ params }: Props) {
             Como chegar
           </a>
         </p>
+
+        {!event.hide_ads && <AdSlot name="evento-apos-local" />}
       </article>
     </SiteShell>
   );

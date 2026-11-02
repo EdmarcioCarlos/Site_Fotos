@@ -34,6 +34,12 @@ for (const [slug, name, description, address, city, date, image, published] of e
   );
 }
 
+await db.exec(`
+  UPDATE events SET details = 'Texto longo de exemplo: conte como foi a cobertura e os destaques do dia.'
+    WHERE slug = 'copa-de-futebol-exemplo-2026';
+  UPDATE events SET hide_ads = true WHERE slug = 'media-day-volei-exemplo-2026';
+`);
+
 const server = new PGLiteSocketServer({ db, port: PORT, host: "127.0.0.1", maxConnections: 20 });
 await server.start();
 

@@ -34,6 +34,7 @@ export type UserFormState = { error?: string; created?: { email: string; passwor
 function refreshPublicPages(slug: string) {
   revalidatePath("/");
   revalidatePath(`/eventos/${slug}`);
+  revalidatePath("/sitemap.xml");
 }
 
 // Falhar ao apagar a imagem antiga não deve desfazer a alteração já salva no evento.

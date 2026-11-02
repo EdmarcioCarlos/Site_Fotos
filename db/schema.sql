@@ -40,3 +40,6 @@ CREATE TABLE IF NOT EXISTS events (
   updated_at  timestamptz NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS events_published_date_idx ON events (published, event_date DESC);
+
+ALTER TABLE events ADD COLUMN IF NOT EXISTS details text NOT NULL DEFAULT '';
+ALTER TABLE events ADD COLUMN IF NOT EXISTS hide_ads boolean NOT NULL DEFAULT false;
