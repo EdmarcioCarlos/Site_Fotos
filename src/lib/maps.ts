@@ -6,9 +6,8 @@ export function locationQuery(address: string, city: string): string {
 }
 
 export function mapEmbedUrl(place: string): string | null {
-  const key = process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY;
-  if (!key || !place) return null;
-  return `https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(key)}&q=${encodeURIComponent(place)}`;
+  if (!place) return null;
+  return `https://www.google.com/maps?q=${encodeURIComponent(place)}&output=embed`;
 }
 
 export function directionsUrl(place: string): string {

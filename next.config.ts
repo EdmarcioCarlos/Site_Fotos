@@ -9,7 +9,7 @@ const csp = [
   "img-src 'self' data: https://*.public.blob.vercel-storage.com",
   "font-src 'self'",
   `connect-src 'self' https://vercel.com https://*.blob.vercel-storage.com${isDev ? " ws:" : ""}`,
-  "frame-src https://www.google.com",
+  "frame-src https://www.google.com https://maps.google.com",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",
@@ -29,7 +29,6 @@ const nextConfig: NextConfig = {
           { key: "Content-Security-Policy", value: csp },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-Frame-Options", value: "DENY" },
-          // O Google precisa receber a origem para validar a restrição da chave do mapa.
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
           {

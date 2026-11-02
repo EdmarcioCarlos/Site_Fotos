@@ -14,7 +14,7 @@ Divulgar os eventos fotografados pela PhotoPRO e levar o visitante ao site exter
 | Código | GitHub privado, só com o código | Escolha do usuário |
 | Banco | Neon (Postgres), plano Free | Não pausa o projeto por inatividade |
 | Banners | Vercel Blob público, com envio direto do navegador | Evita o limite de corpo de requisição das funções |
-| Mapa | Endereço digitado, com Maps Embed e link "Como chegar" | Gratuito e sem autocompletar pago |
+| Mapa | Endereço digitado, com mapa incorporado sem chave (`output=embed`, igual ao site do Granada) e link "Como chegar" | Sem chave nem conta no Google Cloud |
 | Acesso ao painel | Vários usuários, papéis `owner` e `editor` | Escolha do usuário |
 | Login | E-mail e senha forte, sem 2FA | Escolha do usuário |
 | Visitantes | Nenhum dado coletado | Escolha do usuário |
@@ -59,6 +59,6 @@ Venda no próprio site, galeria de fotos, 2FA, histórico de alterações, recup
 
 ## Limitações conhecidas
 
-- A chave do mapa é pública por natureza, e a proteção é a restrição no Google Cloud.
+- O mapa sem chave não faz parte da API documentada do Google. Se parar de funcionar, a alternativa é a Maps Embed API, com chave restrita ao domínio.
 - Um banner enviado em um formulário abandonado fica sem uso no Blob.
 - O limite de tentativas usa o IP informado pela Vercel, e um atacante com muitos IPs fica limitado só pelo teto por conta e IP.

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { formatEventDate } from "@/lib/format";
-import { directionsUrl, locationQuery } from "@/lib/maps";
+import { directionsUrl, locationQuery, mapEmbedUrl } from "@/lib/maps";
 import { parseEventInput, slugify } from "@/lib/validation";
 
 const BANNER = "https://abc.public.blob.vercel-storage.com/banners/a.jpg";
@@ -69,6 +69,13 @@ describe("apoio", () => {
 
   it("formata a data sem depender do fuso", () => {
     expect(formatEventDate("2026-01-01")).toBe("1 de janeiro de 2026");
+  });
+
+  it("monta o mapa sem chave e só quando há endereço", () => {
+    expect(mapEmbedUrl("Rua A & B")).toBe(
+      "https://www.google.com/maps?q=Rua%20A%20%26%20B&output=embed",
+    );
+    expect(mapEmbedUrl("")).toBeNull();
   });
 
   it("codifica o endereço no link de rota", () => {

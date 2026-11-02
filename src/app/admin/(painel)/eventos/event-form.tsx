@@ -154,7 +154,7 @@ export function EventForm({ action, event, uploadEnabled }: Props) {
             referrerPolicy="strict-origin-when-cross-origin"
           />
         ) : (
-          <p className="hint">O mapa aparece aqui quando o endereço e a chave do Maps existirem.</p>
+          <p className="hint">O mapa aparece aqui quando você digitar o endereço.</p>
         )}
       </div>
 
