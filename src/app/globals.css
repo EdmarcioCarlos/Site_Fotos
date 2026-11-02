@@ -1,0 +1,523 @@
+:root {
+  --black: #0a0a0a;
+  --surface: #161616;
+  --surface-raised: #202020;
+  --line: #333333;
+  --white: #ffffff;
+  --muted: #b5b5b5;
+  --red: #cb1718;
+  --red-hover: #e0201f;
+  --red-text: #ff6b6b;
+  --ok: #6fd08c;
+  --radius: 10px;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+a {
+  color: inherit;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display), "Arial Narrow", sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  line-height: 1.15;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 2px;
+}
+
+.container {
+  width: 100%;
+  max-width: 1160px;
+  margin-inline: auto;
+  padding-inline: 16px;
+}
+
+.narrow {
+  max-width: 780px;
+}
+
+/* Linha pontilhada da logo */
+.dots {
+  border: 0;
+  border-top: 4px dotted var(--white);
+  margin: 0;
+  opacity: 0.85;
+}
+
+/* Cabeçalho e rodapé */
+.site-header {
+  padding-block: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.site-header .container,
+.admin-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.brand {
+  display: inline-flex;
+  border-radius: 50%;
+}
+
+.brand img {
+  display: block;
+  border-radius: 50%;
+}
+
+.site-footer {
+  margin-top: 56px;
+  padding-block: 24px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.site-footer p {
+  margin: 0 0 8px;
+}
+
+.footer-title {
+  color: var(--white);
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.contact-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 0 0 20px;
+  padding: 0;
+  list-style: none;
+  overflow-wrap: anywhere;
+}
+
+.text-link {
+  color: var(--white);
+  text-underline-offset: 3px;
+}
+
+/* Abertura */
+.hero {
+  padding-block: 40px 28px;
+}
+
+.hero h1 {
+  font-size: clamp(2.1rem, 7vw, 3.75rem);
+  max-width: 16ch;
+}
+
+.hero p {
+  color: var(--muted);
+  margin: 14px 0 26px;
+  max-width: 56ch;
+}
+
+/* Cartões de evento */
+.event-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  gap: 20px;
+  margin: 28px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.event-card {
+  display: block;
+  height: 100%;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  text-decoration: none;
+  transition: border-color 0.15s ease;
+}
+
+.event-card:hover {
+  border-color: var(--red);
+}
+
+.banner {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: var(--surface-raised);
+  overflow: hidden;
+}
+
+.banner img {
+  object-fit: cover;
+}
+
+.banner-contain img {
+  object-fit: contain;
+}
+
+.event-card-body {
+  padding: 16px;
+}
+
+.event-card h2 {
+  font-size: 1.4rem;
+  overflow-wrap: anywhere;
+}
+
+.event-meta {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 8px 0 0;
+}
+
+.empty {
+  margin-top: 28px;
+  padding: 32px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--muted);
+  text-align: center;
+}
+
+/* Página do evento */
+.event-page {
+  padding-top: 24px;
+}
+
+.event-page .banner {
+  border-radius: var(--radius);
+}
+
+.event-page h1 {
+  font-size: clamp(1.9rem, 6vw, 3rem);
+  margin-top: 24px;
+  overflow-wrap: anywhere;
+}
+
+.event-description {
+  margin: 18px 0 26px;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.section-title {
+  font-size: 1.4rem;
+  margin: 34px 0 6px;
+}
+
+.map-frame {
+  display: block;
+  width: 100%;
+  height: 320px;
+  margin-top: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 16px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* Botões */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 10px 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-raised);
+  color: var(--white);
+  font: inherit;
+  font-size: 15px;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button:hover {
+  border-color: var(--white);
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.button-primary {
+  background: var(--red);
+  border-color: var(--red);
+  font-weight: 600;
+}
+
+.button-primary:hover {
+  background: var(--red-hover);
+  border-color: var(--red-hover);
+}
+
+.button-large {
+  width: 100%;
+  min-height: 56px;
+  font-size: 18px;
+}
+
+.button-danger {
+  color: var(--red-text);
+}
+
+.button-danger:hover {
+  border-color: var(--red-text);
+}
+
+/* Painel */
+.admin-header {
+  padding-block: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.admin-header nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px 16px;
+  font-size: 15px;
+}
+
+.admin-header form {
+  margin: 0;
+}
+
+.link-button {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.admin-main {
+  padding-block: 28px 56px;
+}
+
+.admin-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.admin-title h1 {
+  font-size: 2rem;
+}
+
+.admin-list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.admin-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.admin-item-info {
+  flex: 1 1 240px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.admin-item-info strong {
+  display: block;
+}
+
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.admin-actions form {
+  margin: 0;
+}
+
+.status {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.status-on {
+  color: var(--ok);
+}
+
+/* Formulários */
+.form {
+  display: grid;
+  gap: 20px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field label {
+  font-weight: 600;
+}
+
+.field input[type="text"],
+.field input[type="email"],
+.field input[type="password"],
+.field input[type="url"],
+.field input[type="date"],
+.field textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--white);
+  font: inherit;
+}
+
+.field textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 20px;
+}
+
+.hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.error {
+  margin: 0;
+  color: var(--red-text);
+  font-size: 14px;
+}
+
+.notice {
+  padding: 14px;
+  background: var(--surface);
+  border: 1px solid var(--ok);
+  border-radius: 8px;
+  overflow-wrap: anywhere;
+}
+
+.notice code {
+  display: block;
+  margin-top: 6px;
+  font-size: 18px;
+  user-select: all;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+}
+
+.checkbox input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--red);
+}
+
+.banner-preview {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.login-box {
+  max-width: 400px;
+  margin: 48px auto;
+  padding-inline: 16px;
+}
+
+.login-box img {
+  display: block;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+}
+
+.login-box h1 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}

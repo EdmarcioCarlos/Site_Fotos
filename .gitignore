@@ -1,0 +1,39 @@
+# Dependências e build
+node_modules/
+.next/
+out/
+build/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+
+# Segredos: nunca versionar. Só o modelo .env.example entra no repositório.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+credentials*.json
+secrets*.json
+service-account*.json
+
+# Vercel
+.vercel/
+
+# Backups e despejos de banco podem conter dados reais
+*.sql.gz
+*.dump
+*.bak
+dump*.sql
+backup*.sql
+
+# Material de referência local
+referencias/
+
+# Sistema e logs
+.DS_Store
+Thumbs.db
+*.log
