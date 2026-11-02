@@ -21,15 +21,8 @@ Abra `http://localhost:3000`. O e-mail e a senha do painel aparecem no terminal.
 2. **Banco:** em Storage, adicione o Neon. Isso cria a variável `DATABASE_URL`.
 3. **Banners:** em Storage, crie um Blob store público. Isso cria a variável `BLOB_READ_WRITE_TOKEN`.
 4. **Mapa:** no Google Cloud, ative a Maps Embed API e crie uma chave restrita ao domínio do site e somente a essa API. Salve-a na Vercel como `NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY`.
-5. **Configuração local:** copie `.env.example` para `.env.local` e preencha com os mesmos valores.
-6. **Tabelas e primeiro acesso:** rode os comandos abaixo antes do primeiro deploy, porque o build lê os eventos do banco. A senha temporária aparece uma única vez e será trocada no primeiro login.
-
-   ```powershell
-   npm run db:migrate
-   npm run admin:create -- seu@email.com "Seu Nome"
-   ```
-
-7. **Deploy:** publique e entre em `/admin`.
+5. **Primeiro acesso:** salve na Vercel, em Production, as variáveis `BOOTSTRAP_ADMIN_EMAIL`, `BOOTSTRAP_ADMIN_NAME` e `BOOTSTRAP_ADMIN_PASSWORD_HASH` (gerado com `hashPassword`, de `src/lib/password.ts`). Elas só têm efeito enquanto não existe responsável, e a senha temporária é trocada no primeiro login.
+6. **Deploy:** publique e entre em `/admin`. Cada publicação cria as tabelas que faltarem antes do build (`vercel.json`).
 
 **Antes de divulgar o site, migre a conta da Vercel para o plano Pro.** O plano Hobby não permite uso comercial.
 
