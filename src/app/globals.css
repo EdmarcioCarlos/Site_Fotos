@@ -118,6 +118,13 @@ h3 {
   gap: 8px;
 }
 
+@media (max-width: 400px) {
+  .header-actions .button {
+    padding-inline: 10px;
+    font-size: 14px;
+  }
+}
+
 /* Altura reservada para a página não pular quando o anúncio carregar */
 .ad-slot {
   min-height: 280px;
