@@ -13,6 +13,10 @@ const EMAIL = "demo@photopro.local";
 const db = new PGlite();
 await db.exec(readFileSync("db/schema.sql", "utf8"));
 
+// Get category IDs
+const catRows = await db.query(`SELECT id, slug FROM categories`);
+const catMap = Object.fromEntries(catRows.rows.map((r) => [r.slug, r.id]));
+
 const password = generatePassword();
 await db.query(
   `INSERT INTO users (email, name, password_hash, role, must_change_password)
@@ -21,16 +25,16 @@ await db.query(
 );
 
 const events = [
-  ["copa-de-futebol-exemplo-2026", "Copa de Futebol (exemplo)", "Final da copa com cobertura completa, da entrada dos times à premiação.", "Estádio Morenão", "Campo Grande - MS", "2026-10-25", "futebol", true],
-  ["media-day-volei-exemplo-2026", "Media Day Vôlei (exemplo)", "Sessão de fotos oficiais das equipes e dos atletas antes da temporada.", "Ginásio Guanandizão", "Campo Grande - MS", "2026-09-12", "volei", true],
-  ["encontro-corporativo-exemplo-2026", "Encontro Corporativo (exemplo)", "Evento oculto: aparece só no painel, para testar o botão Publicar.", "Centro de Convenções Rubens Gil de Camillo", "Campo Grande - MS", "2026-08-03", "corporativo", false],
+  ["copa-de-futebol-exemplo-2026", "Copa de Futebol (exemplo)", "Final da copa com cobertura completa, da entrada dos times à premiação.", "Estádio Morenão", "Campo Grande - MS", "2026-10-25", "futebol", catMap.futebol, true],
+  ["media-day-volei-exemplo-2026", "Media Day Vôlei (exemplo)", "Sessão de fotos oficiais das equipes e dos atletas antes da temporada.", "Ginásio Guanandizão", "Campo Grande - MS", "2026-09-12", "volei", catMap.volei, true],
+  ["encontro-corporativo-exemplo-2026", "Encontro Corporativo (exemplo)", "Evento oculto: aparece só no painel, para testar o botão Publicar.", "Centro de Convenções Rubens Gil de Camillo", "Campo Grande - MS", "2026-08-03", "corporativo", catMap.corporativo, false],
 ];
-for (const [slug, name, description, address, city, date, image, published] of events) {
+for (const [slug, name, description, address, city, date, image, categoryId, published] of events) {
   await db.query(
     `INSERT INTO events
-       (slug, name, description, address, city, event_date, banner_url, sales_url, published)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, 'https://www.instagram.com/photopro.ms/', $8)`,
-    [slug, name, description, address, city, date, `/demo/${image}.jpg`, published],
+       (slug, name, description, address, city, event_date, banner_url, sales_url, published, category_id)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, 'https://www.instagram.com/photopro.ms/', $8, $9)`,
+    [slug, name, description, address, city, date, `/demo/${image}.jpg`, published, categoryId],
   );
 }
 

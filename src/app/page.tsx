@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { AdSlot } from "@/components/ad-slot";
 import { SiteShell } from "@/components/site-shell";
-import { listPublishedEvents, type EventRow } from "@/lib/events";
+import { listPublishedEvents, listCategories, type EventRow, type CategoryRow } from "@/lib/events";
 import { EventSearch } from "@/components/event-search";
 import { getHeroBannerUrl } from "@/lib/site";
 
@@ -29,8 +29,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const [events, heroBannerUrl] = await Promise.all([
+  const [events, categories, heroBannerUrl] = await Promise.all([
     listPublishedEvents(),
+    listCategories(),
     getHeroBannerUrl(),
   ]);
 
@@ -54,7 +55,7 @@ export default async function HomePage() {
         <hr className="dots" />
       </section>
       <section className="container" aria-label="Eventos">
-        <EventSearch initialEvents={events} />
+        <EventSearch initialEvents={events} categories={categories} />
         {events.length >= MIN_EVENTS_FOR_AD && <AdSlot name="inicio-entre-eventos" slot="SEU_SLOT_HOME" format="horizontal" />}
       </section>
     </SiteShell>

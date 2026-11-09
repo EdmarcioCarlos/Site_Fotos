@@ -3,25 +3,33 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import type { EventRow } from "@/lib/events";
+import type { EventRow, CategoryRow } from "@/lib/events";
 import { formatEventDate } from "@/lib/format";
 
 interface EventSearchProps {
   initialEvents: EventRow[];
+  categories: CategoryRow[];
 }
 
-export function EventSearch({ initialEvents }: EventSearchProps) {
+export function EventSearch({ initialEvents, categories }: EventSearchProps) {
   const [query, setQuery] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<string>("");
 
   const filteredEvents = useMemo(() => {
-    if (!query.trim()) return initialEvents;
-    const lower = query.toLowerCase();
-    return initialEvents.filter(
-      (event) =>
-        event.name.toLowerCase().includes(lower) ||
-        event.city.toLowerCase().includes(lower)
-    );
-  }, [initialEvents, query]);
+    let result = initialEvents;
+    if (query.trim()) {
+      const lower = query.toLowerCase();
+      result = result.filter(
+        (event) =>
+          event.name.toLowerCase().includes(lower) ||
+          event.city.toLowerCase().includes(lower)
+      );
+    }
+    if (categoryFilter) {
+      result = result.filter((event) => event.category_id === categoryFilter);
+    }
+    return result;
+  }, [initialEvents, query, categoryFilter]);
 
   const displayEvents = filteredEvents.slice(0, 6);
   const moreEvents = filteredEvents.slice(6);
@@ -71,10 +79,31 @@ export function EventSearch({ initialEvents }: EventSearchProps) {
         )}
       </div>
 
+      {categories.length > 0 && (
+        <div className="category-filter-wrapper">
+          <label htmlFor="category-filter" className="search-label">
+            Filtrar por modalidade
+          </label>
+          <select
+            id="category-filter"
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+            className="category-filter"
+          >
+            <option value="">Todas as modalidades</option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id} style={{ color: cat.color }}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
       {filteredEvents.length === 0 ? (
         <p className="empty">
-          {query
-            ? `Nenhum evento encontrado para "${query}".`
+          {query || categoryFilter
+            ? `Nenhum evento encontrado${query ? ` para "${query}"` : ""}${categoryFilter ? " nessa modalidade" : ""}.`
             : "Nenhum evento publicado ainda. Volte em breve!"}
         </p>
       ) : (

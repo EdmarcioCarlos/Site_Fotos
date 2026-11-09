@@ -5,9 +5,13 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import {
   createEvent,
+  createCategory,
+  deleteCategory,
   deleteEvent,
+  getCategoryById,
   getEventById,
   setEventPublished,
+  updateCategory,
   updateEvent,
 } from "@/lib/events";
 import { passwordProblem, verifyPassword } from "@/lib/password";
@@ -161,6 +165,74 @@ export async function resetUserPasswordAction(
 }
 
 export type SettingsFormState = { errors?: Record<string, string> };
+
+export type CategoryFormState = { errors?: { name?: string; slug?: string; description?: string; color?: string } };
+
+export async function createCategoryAction(
+  _: CategoryFormState,
+  form: FormData,
+): Promise<CategoryFormState> {
+  await requireOwner();
+  const errors: CategoryFormState["errors"] = {};
+
+  const name = String(form.get("name") ?? "").trim();
+  const slug = String(form.get("slug") ?? "").trim();
+  const description = String(form.get("description") ?? "").trim();
+  const color = String(form.get("color") ?? "#cb1718").trim();
+
+  if (!name || name.length < 2 || name.length > 80) errors.name = "Nome deve ter 2 a 80 caracteres.";
+  if (!slug || slug.length < 2 || slug.length > 80) errors.slug = "Slug deve ter 2 a 80 caracteres.";
+  if (!/^[a-z0-9-]+$/.test(slug)) errors.slug = "Slug deve conter apenas letras minúsculas, números e hífen.";
+  if (description.length > 500) errors.description = "Descrição muito longa (máx. 500).";
+  if (!/^#[0-9a-fA-F]{6}$/.test(color)) errors.color = "Cor inválida (use formato #RRGGBB).";
+
+  if (Object.keys(errors).length > 0) return { errors };
+
+  const created = await createCategory({ name, slug, description, color });
+  if (!created) return { errors: { slug: "Já existe uma modalidade com este slug." } };
+
+  revalidatePath("/admin/categorias");
+  revalidatePath("/");
+  redirect("/admin/categorias");
+}
+
+export async function updateCategoryAction(
+  id: string,
+  _: CategoryFormState,
+  form: FormData,
+): Promise<CategoryFormState> {
+  await requireOwner();
+  const errors: CategoryFormState["errors"] = {};
+
+  const name = String(form.get("name") ?? "").trim();
+  const slug = String(form.get("slug") ?? "").trim();
+  const description = String(form.get("description") ?? "").trim();
+  const color = String(form.get("color") ?? "#cb1718").trim();
+
+  if (!name || name.length < 2 || name.length > 80) errors.name = "Nome deve ter 2 a 80 caracteres.";
+  if (!slug || slug.length < 2 || slug.length > 80) errors.slug = "Slug deve ter 2 a 80 caracteres.";
+  if (!/^[a-z0-9-]+$/.test(slug)) errors.slug = "Slug deve conter apenas letras minúsculas, números e hífen.";
+  if (description.length > 500) errors.description = "Descrição muito longa (máx. 500).";
+  if (!/^#[0-9a-fA-F]{6}$/.test(color)) errors.color = "Cor inválida (use formato #RRGGBB).";
+
+  if (Object.keys(errors).length > 0) return { errors };
+
+  const updated = await updateCategory(id, { name, slug, description, color });
+  if (!updated) return { errors: { slug: "Modalidade não encontrada ou slug já em uso." } };
+
+  revalidatePath("/admin/categorias");
+  revalidatePath("/");
+  return { errors: {} };
+}
+
+export async function deleteCategoryAction(id: string) {
+  await requireOwner();
+  const deleted = await deleteCategory(id);
+  if (deleted) {
+    revalidatePath("/admin/categorias");
+    revalidatePath("/");
+  }
+}
 
 export async function updateSettingsAction(
   _: SettingsFormState,

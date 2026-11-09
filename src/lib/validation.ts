@@ -14,6 +14,7 @@ export type EventInput = {
   published: boolean;
   details: string;
   hideAds: boolean;
+  categoryId: string | null;
 };
 
 export type FieldErrors = Partial<Record<keyof EventInput, string>>;
@@ -64,6 +65,7 @@ export function parseEventInput(form: FormData): ParseResult<EventInput> {
     published: form.get("published") === "on",
     details: text(form, "details"),
     hideAds: form.get("hideAds") === "on",
+    categoryId: text(form, "categoryId") || null,
   };
 
   const errors: FieldErrors = {};

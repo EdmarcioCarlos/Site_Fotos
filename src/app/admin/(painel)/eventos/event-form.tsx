@@ -3,7 +3,7 @@
 import { upload } from "@vercel/blob/client";
 import Link from "next/link";
 import { useActionState, useEffect, useState } from "react";
-import type { EventRow } from "@/lib/events";
+import type { EventRow, CategoryRow } from "@/lib/events";
 import { locationQuery, mapEmbedUrl } from "@/lib/maps";
 import { LIMITS } from "@/lib/validation";
 import type { EventFormState } from "../actions";
@@ -14,10 +14,11 @@ const initialState: EventFormState = {};
 type Props = {
   action: (state: EventFormState, form: FormData) => Promise<EventFormState>;
   event?: EventRow;
+  categories: CategoryRow[];
   uploadEnabled: boolean;
 };
 
-export function EventForm({ action, event, uploadEnabled }: Props) {
+export function EventForm({ action, event, categories, uploadEnabled }: Props) {
   const [state, formAction, pending] = useActionState(action, initialState);
   const [name, setName] = useState(event?.name ?? "");
   const [description, setDescription] = useState(event?.description ?? "");
@@ -28,6 +29,7 @@ export function EventForm({ action, event, uploadEnabled }: Props) {
   const [published, setPublished] = useState(event?.published ?? false);
   const [details, setDetails] = useState(event?.details ?? "");
   const [hideAds, setHideAds] = useState(event?.hide_ads ?? false);
+  const [categoryId, setCategoryId] = useState(event?.category_id ?? "");
   const [bannerUrl, setBannerUrl] = useState(event?.banner_url ?? "");
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
@@ -133,6 +135,19 @@ export function EventForm({ action, event, uploadEnabled }: Props) {
           />
           {errors.city && <p className="error">{errors.city}</p>}
         </div>
+      </div>
+
+      <div className="field">
+        <label htmlFor="categoryId">Modalidade</label>
+        <select id="categoryId" name="categoryId" value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
+          <option value="">Selecione uma modalidade</option>
+          {categories.map((cat) => (
+            <option key={cat.id} value={cat.id} style={{ color: cat.color }}>
+              {cat.name}
+            </option>
+          ))}
+        </select>
+        {errors.categoryId && <p className="error">{errors.categoryId}</p>}
       </div>
 
       <div className="field">

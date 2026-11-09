@@ -16,13 +16,32 @@ export type EventRow = {
   published: boolean;
   details: string;
   hide_ads: boolean;
+  category_id: string | null;
+};
+
+export type CategoryRow = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  color: string;
+  created_at: Date;
+  updated_at: Date;
 };
 
 // event_date em texto: evita que o fuso do servidor mude o dia do evento.
 const COLUMNS = `id, slug, name, description, address, city, event_date::text AS event_date,
-  banner_url, sales_url, published, details, hide_ads`;
+  banner_url, sales_url, published, details, hide_ads, category_id`;
 
-export function listPublishedEvents(): Promise<EventRow[]> {
+const CAT_COLUMNS = `id, name, slug, description, color, created_at, updated_at`;
+
+export function listPublishedEvents(categoryId?: string): Promise<EventRow[]> {
+  if (categoryId) {
+    return query<EventRow>(
+      `SELECT ${COLUMNS} FROM events WHERE published AND category_id = $1 ORDER BY event_date DESC, created_at DESC`,
+      [categoryId],
+    );
+  }
   return query<EventRow>(
     `SELECT ${COLUMNS} FROM events WHERE published ORDER BY event_date DESC, created_at DESC`,
   );
@@ -52,12 +71,59 @@ export async function getEventById(id: string): Promise<EventRow | null> {
   return rows[0] ?? null;
 }
 
+// Categorias
+export function listCategories(): Promise<CategoryRow[]> {
+  return query<CategoryRow>(`SELECT ${CAT_COLUMNS} FROM categories ORDER BY name`);
+}
+
+export async function getCategoryById(id: string): Promise<CategoryRow | null> {
+  if (!isUuid(id)) return null;
+  const rows = await query<CategoryRow>(`SELECT ${CAT_COLUMNS} FROM categories WHERE id = $1`, [id]);
+  return rows[0] ?? null;
+}
+
+export async function getCategoryBySlug(slug: string): Promise<CategoryRow | null> {
+  const rows = await query<CategoryRow>(`SELECT ${CAT_COLUMNS} FROM categories WHERE slug = $1`, [slug]);
+  return rows[0] ?? null;
+}
+
+export async function createCategory(input: { name: string; slug: string; description?: string; color?: string }): Promise<CategoryRow> {
+  const rows = await query<CategoryRow>(
+    `INSERT INTO categories (name, slug, description, color)
+     VALUES ($1, $2, $3, $4)
+     RETURNING ${CAT_COLUMNS}`,
+    [input.name, input.slug, input.description ?? '', input.color ?? '#cb1718'],
+  );
+  return rows[0]!;
+}
+
+export async function updateCategory(id: string, input: { name?: string; slug?: string; description?: string; color?: string }): Promise<CategoryRow | null> {
+  if (!isUuid(id)) return null;
+  const rows = await query<CategoryRow>(
+    `UPDATE categories SET
+       name = COALESCE($2, name),
+       slug = COALESCE($3, slug),
+       description = COALESCE($4, description),
+       color = COALESCE($5, color),
+       updated_at = now()
+     WHERE id = $1 RETURNING ${CAT_COLUMNS}`,
+    [id, input.name, input.slug, input.description, input.color],
+  );
+  return rows[0] ?? null;
+}
+
+export async function deleteCategory(id: string): Promise<CategoryRow | null> {
+  if (!isUuid(id)) return null;
+  const rows = await query<CategoryRow>(`DELETE FROM categories WHERE id = $1 RETURNING ${CAT_COLUMNS}`, [id]);
+  return rows[0] ?? null;
+}
+
 async function insertWithSlug(slug: string, input: EventInput): Promise<EventRow | null> {
   const rows = await query<EventRow>(
     `INSERT INTO events
        (slug, name, description, address, city, event_date, banner_url, sales_url, published,
-        details, hide_ads)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        details, hide_ads, category_id)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
      ON CONFLICT (slug) DO NOTHING
      RETURNING ${COLUMNS}`,
     [
@@ -72,6 +138,7 @@ async function insertWithSlug(slug: string, input: EventInput): Promise<EventRow
       input.published,
       input.details,
       input.hideAds,
+      input.categoryId,
     ],
   );
   return rows[0] ?? null;
@@ -91,7 +158,7 @@ export async function updateEvent(id: string, input: EventInput): Promise<EventR
   if (!isUuid(id)) return null;
   const rows = await query<EventRow>(
     `UPDATE events SET name = $2, description = $3, address = $4, city = $5, event_date = $6,
-       banner_url = $7, sales_url = $8, published = $9, details = $10, hide_ads = $11,
+       banner_url = $7, sales_url = $8, published = $9, details = $10, hide_ads = $11, category_id = $12,
        updated_at = now()
      WHERE id = $1 RETURNING ${COLUMNS}`,
     [
@@ -106,6 +173,7 @@ export async function updateEvent(id: string, input: EventInput): Promise<EventR
       input.published,
       input.details,
       input.hideAds,
+      input.categoryId,
     ],
   );
   return rows[0] ?? null;

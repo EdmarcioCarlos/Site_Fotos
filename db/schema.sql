@@ -50,3 +50,26 @@ CREATE TABLE IF NOT EXISTS site_settings (
   value text NOT NULL,
   updated_at timestamptz NOT NULL DEFAULT now()
 );
+
+-- Modalidades/Categorias de eventos
+CREATE TABLE IF NOT EXISTS categories (
+  id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  name        varchar(80) NOT NULL UNIQUE,
+  slug        varchar(80) NOT NULL UNIQUE,
+  description text NOT NULL DEFAULT '',
+  color       varchar(7) NOT NULL DEFAULT '#cb1718',
+  created_at  timestamptz NOT NULL DEFAULT now(),
+  updated_at  timestamptz NOT NULL DEFAULT now()
+);
+
+-- Adiciona categoria aos eventos
+ALTER TABLE events ADD COLUMN IF NOT EXISTS category_id uuid REFERENCES categories (id) ON DELETE SET NULL;
+CREATE INDEX IF NOT EXISTS events_category_idx ON events (category_id);
+
+-- Categorias padrão (exemplos iniciais, podem ser editadas/excluídas no painel)
+INSERT INTO categories (name, slug, description, color) VALUES
+  ('Futebol', 'futebol', 'Eventos de futebol e campeonatos', '#cb1718'),
+  ('Vôlei', 'volei', 'Eventos de vôlei e torneios', '#2563eb'),
+  ('Airsoft', 'airsoft', 'Eventos de airsoft e jogos táticos', '#16a34a'),
+  ('Corporativo', 'corporativo', 'Eventos empresariais e corporativos', '#7c3aed')
+ON CONFLICT (slug) DO NOTHING;

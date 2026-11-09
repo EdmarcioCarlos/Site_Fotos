@@ -16,6 +16,7 @@ export default async function PanelLayout({ children }: { children: React.ReactN
           </Link>
           <nav aria-label="Painel">
             <Link href="/admin">Eventos</Link>
+            {user.role === "owner" && <Link href="/admin/categorias">Modalidades</Link>}
             {user.role === "owner" && <Link href="/admin/usuarios">Usuários</Link>}
             {user.role === "owner" && <Link href="/admin/configuracoes">Configurações</Link>}
             <Link href="/admin/senha">Minha senha</Link>
