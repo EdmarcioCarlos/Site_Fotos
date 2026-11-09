@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { HIRE_URL, INSTAGRAM_URL, WHATSAPP_URL, YOUTUBE_URL } from "@/lib/site";
+import { HIRE_URL, INSTAGRAM_URL, WHATSAPP_URL, YOUTUBE_URL } from "@/lib/constants";
 
 interface SiteShellProps {
   children: React.ReactNode;

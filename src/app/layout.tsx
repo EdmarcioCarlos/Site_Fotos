@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Oswald } from "next/font/google";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL } from "@/lib/constants";
 import "./globals.css";
 
 const display = Oswald({ subsets: ["latin"], weight: ["300", "400"], variable: "--font-display" });

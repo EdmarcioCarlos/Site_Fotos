@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { SiteShell } from "@/components/site-shell";
-import { HIRE_URL } from "@/lib/site";
 import { getSiteSetting, getSocialIcons } from "@/lib/events";
+import { HIRE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Sobre",

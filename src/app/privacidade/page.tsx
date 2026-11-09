@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { SiteShell } from "@/components/site-shell";
-import { WHATSAPP_URL } from "@/lib/site";
+import { WHATSAPP_URL } from "@/lib/constants";
 import { getSocialIcons } from "@/lib/events";
 
 export const metadata: Metadata = {

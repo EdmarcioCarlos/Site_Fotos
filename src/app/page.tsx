@@ -5,6 +5,7 @@ import { SiteShell } from "@/components/site-shell";
 import { listPublishedEvents, listCategories, getSocialIcons, type EventRow, type CategoryRow } from "@/lib/events";
 import { EventSearch } from "@/components/event-search";
 import { getHeroBannerUrl } from "@/lib/site";
+import { SITE_URL, YOUTUBE_URL, INSTAGRAM_URL, WHATSAPP_URL } from "@/lib/constants";
 
 export const revalidate = 3600;
 

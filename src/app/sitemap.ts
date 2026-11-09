@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { listEventsForSitemap } from "@/lib/events";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 3600;

@@ -7,7 +7,7 @@ import { SiteShell } from "@/components/site-shell";
 import { getPublishedEventBySlug, getSocialIcons, type EventRow } from "@/lib/events";
 import { formatEventDate } from "@/lib/format";
 import { directionsUrl, locationQuery, mapEmbedUrl } from "@/lib/maps";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL } from "@/lib/constants";
 
 export const revalidate = 3600;
 

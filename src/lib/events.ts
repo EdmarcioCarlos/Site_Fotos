@@ -35,51 +35,79 @@ const COLUMNS = `id, slug, name, description, address, city, event_date::text AS
 
 const CAT_COLUMNS = `id, name, slug, description, color, created_at, updated_at`;
 
-export function listPublishedEvents(categoryId?: string): Promise<EventRow[]> {
-  if (categoryId) {
-    return query<EventRow>(
-      `SELECT ${COLUMNS} FROM events WHERE published AND category_id = $1 ORDER BY event_date DESC, created_at DESC`,
-      [categoryId],
+export async function listPublishedEvents(categoryId?: string): Promise<EventRow[]> {
+  try {
+    if (categoryId) {
+      return await query<EventRow>(
+        `SELECT ${COLUMNS} FROM events WHERE published AND category_id = $1 ORDER BY event_date DESC, created_at DESC`,
+        [categoryId],
+      );
+    }
+    return await query<EventRow>(
+      `SELECT ${COLUMNS} FROM events WHERE published ORDER BY event_date DESC, created_at DESC`,
     );
+  } catch {
+    return [];
   }
-  return query<EventRow>(
-    `SELECT ${COLUMNS} FROM events WHERE published ORDER BY event_date DESC, created_at DESC`,
-  );
 }
 
-export function listEventsForSitemap(): Promise<{ slug: string; updated_at: Date }[]> {
-  return query<{ slug: string; updated_at: Date }>(
-    `SELECT slug, updated_at FROM events WHERE published ORDER BY event_date DESC`,
-  );
+export async function listEventsForSitemap(): Promise<{ slug: string; updated_at: Date }[]> {
+  try {
+    return await query<{ slug: string; updated_at: Date }>(
+      `SELECT slug, updated_at FROM events WHERE published ORDER BY event_date DESC`,
+    );
+  } catch {
+    return [];
+  }
 }
 
 export async function getPublishedEventBySlug(slug: string): Promise<EventRow | null> {
-  const rows = await query<EventRow>(
-    `SELECT ${COLUMNS} FROM events WHERE slug = $1 AND published`,
-    [slug],
-  );
-  return rows[0] ?? null;
+  try {
+    const rows = await query<EventRow>(
+      `SELECT ${COLUMNS} FROM events WHERE slug = $1 AND published`,
+      [slug],
+    );
+    return rows[0] ?? null;
+  } catch {
+    return null;
+  }
 }
 
-export function listAllEvents(): Promise<EventRow[]> {
-  return query<EventRow>(`SELECT ${COLUMNS} FROM events ORDER BY event_date DESC, created_at DESC`);
+export async function listAllEvents(): Promise<EventRow[]> {
+  try {
+    return await query<EventRow>(`SELECT ${COLUMNS} FROM events ORDER BY event_date DESC, created_at DESC`);
+  } catch {
+    return [];
+  }
 }
 
 export async function getEventById(id: string): Promise<EventRow | null> {
   if (!isUuid(id)) return null;
-  const rows = await query<EventRow>(`SELECT ${COLUMNS} FROM events WHERE id = $1`, [id]);
-  return rows[0] ?? null;
+  try {
+    const rows = await query<EventRow>(`SELECT ${COLUMNS} FROM events WHERE id = $1`, [id]);
+    return rows[0] ?? null;
+  } catch {
+    return null;
+  }
 }
 
 // Categorias
-export function listCategories(): Promise<CategoryRow[]> {
-  return query<CategoryRow>(`SELECT ${CAT_COLUMNS} FROM categories ORDER BY name`);
+export async function listCategories(): Promise<CategoryRow[]> {
+  try {
+    return await query<CategoryRow>(`SELECT ${CAT_COLUMNS} FROM categories ORDER BY name`);
+  } catch {
+    return [];
+  }
 }
 
 export async function getCategoryById(id: string): Promise<CategoryRow | null> {
   if (!isUuid(id)) return null;
-  const rows = await query<CategoryRow>(`SELECT ${CAT_COLUMNS} FROM categories WHERE id = $1`, [id]);
-  return rows[0] ?? null;
+  try {
+    const rows = await query<CategoryRow>(`SELECT ${CAT_COLUMNS} FROM categories WHERE id = $1`, [id]);
+    return rows[0] ?? null;
+  } catch {
+    return null;
+  }
 }
 
 export async function getCategoryBySlug(slug: string): Promise<CategoryRow | null> {
@@ -214,14 +242,19 @@ export async function listSiteSettings(): Promise<SiteSetting[]> {
 }
 
 export async function getSocialIcons(): Promise<{ youtube?: string; instagram?: string; whatsapp?: string }> {
-  const rows = await query<SiteSetting>(
-    `SELECT key, value FROM site_settings WHERE key IN ('youtube_icon_url', 'instagram_icon_url', 'whatsapp_icon_url')`
-  );
-  const result: { youtube?: string; instagram?: string; whatsapp?: string } = {};
-  for (const row of rows) {
-    if (row.key === 'youtube_icon_url') result.youtube = row.value;
-    else if (row.key === 'instagram_icon_url') result.instagram = row.value;
-    else if (row.key === 'whatsapp_icon_url') result.whatsapp = row.value;
+  try {
+    const rows = await query<SiteSetting>(
+      `SELECT key, value FROM site_settings WHERE key IN ('youtube_icon_url', 'instagram_icon_url', 'whatsapp_icon_url')`
+    );
+    const result: { youtube?: string; instagram?: string; whatsapp?: string } = {};
+    for (const row of rows) {
+      if (row.key === 'youtube_icon_url') result.youtube = row.value;
+      else if (row.key === 'instagram_icon_url') result.instagram = row.value;
+      else if (row.key === 'whatsapp_icon_url') result.whatsapp = row.value;
+    }
+    return result;
+  } catch {
+    // Retorna vazio se não houver conexão com o banco (ex: durante build)
+    return {};
   }
-  return result;
 }
