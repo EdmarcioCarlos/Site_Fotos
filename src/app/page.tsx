@@ -49,7 +49,7 @@ export default async function HomePage() {
         </section>
       )}
       <section className="hero container">
-        <h1>Encontre as fotos do seu evento</h1>
+        <h1>ENCONTRE SUAS FOTOS</h1>
         <p>Escolha o evento abaixo e acesse a galeria para ver e comprar as suas fotos.</p>
         <hr className="dots" />
       </section>
