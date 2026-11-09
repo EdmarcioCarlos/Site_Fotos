@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
+import type { EventRow } from "@/lib/events";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AdSlot } from "@/components/ad-slot";
 import { SiteShell } from "@/components/site-shell";
-import { getPublishedEventBySlug, getSocialIcons, type EventRow } from "@/lib/events";
 import { formatEventDate } from "@/lib/format";
 import { directionsUrl, locationQuery, mapEmbedUrl } from "@/lib/maps";
 import { SITE_URL } from "@/lib/constants";
@@ -19,6 +19,7 @@ export function generateStaticParams() {
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { getPublishedEventBySlug } = await import("@/lib/events");
   const event = await getPublishedEventBySlug((await params).slug);
   if (!event) return {};
   return {
@@ -52,6 +53,8 @@ function eventJsonLd(event: EventRow, place: string): string {
 }
 
 export default async function EventPage({ params }: Props) {
+  const { getPublishedEventBySlug, getSocialIcons } = await import("@/lib/events");
+
   const [event, socialIcons] = await Promise.all([
     getPublishedEventBySlug((await params).slug),
     getSocialIcons(),

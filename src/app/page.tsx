@@ -2,9 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { AdSlot } from "@/components/ad-slot";
 import { SiteShell } from "@/components/site-shell";
-import { listPublishedEvents, listCategories, getSocialIcons, type EventRow, type CategoryRow } from "@/lib/events";
 import { EventSearch } from "@/components/event-search";
-import { getHeroBannerUrl } from "@/lib/site";
 import { SITE_URL, YOUTUBE_URL, INSTAGRAM_URL, WHATSAPP_URL } from "@/lib/constants";
 
 export const revalidate = 3600;
@@ -14,6 +12,7 @@ const EVENTS_BEFORE_AD = 6;
 const MIN_EVENTS_FOR_AD = 3;
 
 export async function generateMetadata(): Promise<Metadata> {
+  const { listPublishedEvents } = await import("@/lib/events");
   const [latest] = await listPublishedEvents();
   return {
     alternates: { canonical: "/" },
@@ -30,6 +29,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
+  const { listPublishedEvents, listCategories, getSocialIcons } = await import("@/lib/events");
+  const { getHeroBannerUrl } = await import("@/lib/site");
+
   const [events, categories, heroBannerUrl, socialIcons] = await Promise.all([
     listPublishedEvents(),
     listCategories(),

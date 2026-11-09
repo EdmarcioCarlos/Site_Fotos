@@ -3,10 +3,10 @@ import { Pool, type QueryResultRow } from "pg";
 
 let pool: Pool | undefined;
 
-function getPool(): Pool {
+function getPool(): Pool | undefined {
   if (!pool) {
     const connectionString = process.env.DATABASE_URL;
-    if (!connectionString) throw new Error("DATABASE_URL não configurada");
+    if (!connectionString) return undefined;
     pool = new Pool({ connectionString, max: 3, connectionTimeoutMillis: 10_000 });
   }
   return pool;
@@ -17,6 +17,8 @@ export async function query<T extends QueryResultRow>(
   text: string,
   params: unknown[] = [],
 ): Promise<T[]> {
-  const result = await getPool().query<T>(text, params);
+  const pool = getPool();
+  if (!pool) return [];
+  const result = await pool.query<T>(text, params);
   return result.rows;
 }

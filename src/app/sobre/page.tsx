@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { SiteShell } from "@/components/site-shell";
-import { getSiteSetting, getSocialIcons } from "@/lib/events";
 import { HIRE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
@@ -11,6 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
+  const { getSiteSetting, getSocialIcons } = await import("@/lib/events");
   const [aboutContent, socialIcons] = await Promise.all([
     getSiteSetting("about_content"),
     getSocialIcons(),
