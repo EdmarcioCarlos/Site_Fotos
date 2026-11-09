@@ -68,7 +68,13 @@ export default async function EventPage({ params }: Props) {
         <Link href="/" className="back-link">
           ← Todos os eventos
         </Link>
-        <div className="banner banner-contain">
+        <a
+          className="banner banner-contain"
+          href={event.sales_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Ver e comprar fotos do evento ${event.name}`}
+        >
           <Image
             className="banner-backdrop"
             src={event.banner_url}
@@ -84,7 +90,7 @@ export default async function EventPage({ params }: Props) {
             sizes="(max-width: 780px) 100vw, 780px"
             priority
           />
-        </div>
+        </a>
         <h1>{event.name}</h1>
         <p className="event-meta">
           {event.city} · {formatEventDate(event.event_date)}

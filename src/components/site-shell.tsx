@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { CONTACT_EMAIL, HIRE_URL, INSTAGRAM_URL, LINKS_URL, YOUTUBE_URL } from "@/lib/site";
+import { CONTACT_EMAIL, HIRE_URL, INSTAGRAM_URL, YOUTUBE_URL } from "@/lib/site";
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
   return (
@@ -16,9 +16,6 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
             <Image src="/logo.png" alt="" width={64} height={64} priority />
           </Link>
           <div className="header-actions">
-            <a className="button" href={LINKS_URL} target="_blank" rel="noopener noreferrer">
-              Meus trabalhos
-            </a>
             <a className="button button-primary" href={HIRE_URL}>
               Contratar
             </a>
