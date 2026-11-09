@@ -103,7 +103,7 @@ export default async function EventPage({ params }: Props) {
           Ver e comprar fotos
         </a>
 
-        {!event.hide_ads && <AdSlot name="evento-apos-botao" />}
+        {!event.hide_ads && <AdSlot name="evento-apos-botao" slot="SEU_SLOT_EVENTO_BOTAO" format="auto" />}
 
         {event.details && (
           <>
@@ -134,7 +134,7 @@ export default async function EventPage({ params }: Props) {
           </a>
         </p>
 
-        {!event.hide_ads && <AdSlot name="evento-apos-local" />}
+        {!event.hide_ads && <AdSlot name="evento-apos-local" slot="SEU_SLOT_EVENTO_LOCAL" format="rectangle" />}
       </article>
     </SiteShell>
   );

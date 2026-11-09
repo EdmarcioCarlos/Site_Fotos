@@ -55,7 +55,7 @@ export default async function HomePage() {
       </section>
       <section className="container" aria-label="Eventos">
         <EventSearch initialEvents={events} />
-        {events.length >= MIN_EVENTS_FOR_AD && <AdSlot name="inicio-entre-eventos" />}
+        {events.length >= MIN_EVENTS_FOR_AD && <AdSlot name="inicio-entre-eventos" slot="SEU_SLOT_HOME" format="horizontal" />}
       </section>
     </SiteShell>
   );
