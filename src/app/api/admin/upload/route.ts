@@ -25,7 +25,7 @@ export async function POST(request: Request) {
       body,
       request,
       onBeforeGenerateToken: async (pathname) => {
-        if (!pathname.startsWith("banners/")) throw new Error("Caminho não permitido");
+        if (!pathname.startsWith("banners/") && !pathname.startsWith("site/")) throw new Error("Caminho não permitido");
         return {
           // SVG fica de fora de propósito: pode conter scripts.
           allowedContentTypes: ["image/jpeg", "image/png", "image/webp"],
