@@ -37,8 +37,10 @@ export default async function AdminCategoriesPage() {
                 </div>
                 <span className="hint">{category.slug}</span>
                 {category.description && (
-                  <br />
-                  <span className="hint">{category.description}</span>
+                  <>
+                    <br />
+                    <span className="hint">{category.description}</span>
+                  </>
                 )}
               </div>
               <div className="admin-actions">
