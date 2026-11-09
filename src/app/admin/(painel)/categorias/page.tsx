@@ -2,7 +2,7 @@ import Link from "next/link";
 import { requireOwner } from "@/lib/session";
 import { listCategories, type CategoryRow } from "@/lib/events";
 import { deleteCategoryAction } from "../actions";
-import { ConfirmButton } from "./confirm-button";
+import { ConfirmButton } from "../confirm-button";
 
 export default async function AdminCategoriesPage() {
   await requireOwner();

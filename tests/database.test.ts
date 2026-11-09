@@ -32,6 +32,7 @@ const input = {
   published: true,
   details: "",
   hideAds: false,
+  categoryId: null,
 };
 
 beforeAll(async () => {
