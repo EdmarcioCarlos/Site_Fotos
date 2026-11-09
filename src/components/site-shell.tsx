@@ -36,8 +36,9 @@ function InstagramIcon() {
 
 function WhatsAppIcon() {
   return (
-    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true">
-      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.454.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.472.099-.174.05-.372-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.372-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.297.126.597.198.896.198.242 0 .49-.025.714-.075.272-.05.644-.249.94-.498.297-.249.52-.324.792-.448.272-.126.497-.323.52-.398.025-.1.074-.174.274-.57.074-.1.025-.174.05-.249.025-.074-.025-.125-.05-.175-.075l-.075-.025c-.125-.05-.299-.2-.448-.398-.248-.273-.548-.548-.797-.772-.272-.248-.52-.348-.697-.424-.222-.074-.443-.148-.69-.148" />
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="11" fill="#25D366" />
+      <path fill="#fff" d="M17.75 10.03c-.23-.17-.97-.59-1.2-.68-.23-.09-.42-.09-.64-.07-.23.02-.4.16-.56.32-.17.17-.33.37-.35.43-.03.07-.14.21-.23.33-.17.23-.53.72-.75 1.06-.22.33-.2.47-.27.53-.07.07-.28.07-.41 0-.14-.07-.54-.54-.74-.95-.2-.4-.34-.8-.34-1.15 0-.34.1-.63.24-.86.14-.24.33-.55.56-.87.24-.33.57-.74.86-1.1.29-.37.47-.55.54-.61.07-.07.19-.07.36-.07.09 0 .2.01.3.03.1.02.21.08.3.2.1.14.12.27.13.3.03.1-.11.3-.3.54-.18.2-.5.6-.77.93-.27.32-.51.7-.63.93-.12.24-.16.36-.16.37 0 .02.15.14 1.1.67 1.02.58 1.74 1.07 2.34 1.18.5.09.78.07 1.1-.1.32-.17.71-.53.93-.88.22-.34.33-.72.3-.94-.03-.2-.12-.32-.32-.48-.13-.11-.3-.15-.5-.15-.19 0-.36.04-.5.12-.25.14-.63.5-.83.9-.2.4-.32.87-.32 1.04 0 .17.06.33.18.48.12.15.42.45.74.76.33.32.7.61 1.08.79.44.2.87.18 1.1-.03.23-.2.5-.5.7-.86.18-.33.29-.69.32-.89.04-.2-.12-.42-.42-.63z"/>
     </svg>
   );
 }
@@ -51,6 +52,17 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
             <Image src="/logo.png" alt="" width={64} height={64} priority />
           </Link>
           <div className="header-actions">
+            <div className="social-links">
+              <SocialIcon href={YOUTUBE_URL} label="YouTube">
+                <YouTubeIcon />
+              </SocialIcon>
+              <SocialIcon href={INSTAGRAM_URL} label="Instagram">
+                <InstagramIcon />
+              </SocialIcon>
+              <SocialIcon href={WHATSAPP_URL} label="WhatsApp">
+                <WhatsAppIcon />
+              </SocialIcon>
+            </div>
             <a className="button button-primary" href={HIRE_URL}>
               Contratar
             </a>
@@ -60,17 +72,6 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       <main>{children}</main>
       <footer className="site-footer">
         <div className="container">
-          <div className="social-links">
-            <SocialIcon href={YOUTUBE_URL} label="YouTube">
-              <YouTubeIcon />
-            </SocialIcon>
-            <SocialIcon href={INSTAGRAM_URL} label="Instagram">
-              <InstagramIcon />
-            </SocialIcon>
-            <SocialIcon href={WHATSAPP_URL} label="WhatsApp">
-              <WhatsAppIcon />
-            </SocialIcon>
-          </div>
           <ul className="contact-list">
             <li>
               <Link className="text-link" href="/sobre">

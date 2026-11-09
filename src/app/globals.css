@@ -118,8 +118,27 @@ h3 {
 .header-actions {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   justify-content: flex-end;
-  gap: 8px;
+  gap: 16px;
+}
+
+.header-actions .social-links {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 0;
+}
+
+.header-actions .social-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.header-actions .social-icon:hover {
+  background: var(--surface-raised);
+  border-color: var(--white);
 }
 
 @media (max-width: 400px) {
