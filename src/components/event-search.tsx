@@ -97,6 +97,7 @@ export function EventSearch({ initialEvents }: EventSearchProps) {
                     <p className="event-meta">
                       {event.city} · {formatEventDate(event.event_date)}
                     </p>
+                    <p className="event-description">{event.description}</p>
                   </div>
                 </Link>
                 <a
@@ -128,6 +129,7 @@ export function EventSearch({ initialEvents }: EventSearchProps) {
                       <p className="event-meta">
                         {event.city} · {formatEventDate(event.event_date)}
                       </p>
+                      <p className="event-description">{event.description}</p>
                     </div>
                   </Link>
                   <a
