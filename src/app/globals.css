@@ -49,6 +49,10 @@ h3 {
   letter-spacing: 0.04em;
   line-height: 1.15;
   margin: 0;
+}
+
+/* Uppercase apenas onde necessário (ex: hero title) */
+.text-uppercase {
   text-transform: uppercase;
 }
 
