@@ -71,8 +71,6 @@ export default async function EventPage({ params }: Props) {
         <a
           className="banner banner-contain"
           href={event.sales_url}
-          target="_blank"
-          rel="noopener noreferrer"
           aria-label={`Ver e comprar fotos do evento ${event.name}`}
         >
           <Image
