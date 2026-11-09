@@ -125,3 +125,22 @@ export async function deleteEvent(id: string): Promise<EventRow | null> {
   const rows = await query<EventRow>(`DELETE FROM events WHERE id = $1 RETURNING ${COLUMNS}`, [id]);
   return rows[0] ?? null;
 }
+
+export type SiteSetting = { key: string; value: string; updated_at: Date };
+
+export async function getSiteSetting(key: string): Promise<string | null> {
+  const rows = await query<SiteSetting>(`SELECT value FROM site_settings WHERE key = $1`, [key]);
+  return rows[0]?.value ?? null;
+}
+
+export async function setSiteSetting(key: string, value: string): Promise<void> {
+  await query(
+    `INSERT INTO site_settings (key, value) VALUES ($1, $2)
+     ON CONFLICT (key) DO UPDATE SET value = $2, updated_at = now()`,
+    [key, value],
+  );
+}
+
+export async function listSiteSettings(): Promise<SiteSetting[]> {
+  return query<SiteSetting>(`SELECT key, value, updated_at FROM site_settings ORDER BY key`);
+}

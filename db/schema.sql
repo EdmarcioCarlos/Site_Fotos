@@ -43,3 +43,10 @@ CREATE INDEX IF NOT EXISTS events_published_date_idx ON events (published, event
 
 ALTER TABLE events ADD COLUMN IF NOT EXISTS details text NOT NULL DEFAULT '';
 ALTER TABLE events ADD COLUMN IF NOT EXISTS hide_ads boolean NOT NULL DEFAULT false;
+
+-- Configurações globais do site (chave-valor)
+CREATE TABLE IF NOT EXISTS site_settings (
+  key   text PRIMARY KEY,
+  value text NOT NULL,
+  updated_at timestamptz NOT NULL DEFAULT now()
+);

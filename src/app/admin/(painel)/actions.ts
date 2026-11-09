@@ -159,3 +159,33 @@ export async function resetUserPasswordAction(
   revalidatePath("/admin/usuarios");
   return { created: { email: user.email, password } };
 }
+
+export type SettingsFormState = { errors?: Record<string, string> };
+
+export async function updateSettingsAction(
+  _: SettingsFormState,
+  form: FormData,
+): Promise<SettingsFormState> {
+  await requireOwner();
+  const errors: Record<string, string> = {};
+
+  const heroBannerUrl = String(form.get("hero_banner_url") ?? "").trim();
+
+  if (heroBannerUrl && !/^https?:\/\//i.test(heroBannerUrl)) {
+    errors.hero_banner_url = "A URL do banner deve ser um link válido (começar com http:// ou https://).";
+  }
+
+  if (Object.keys(errors).length > 0) return { errors };
+
+  const { setSiteSetting, getSiteSetting } = await import("@/lib/events");
+  const current = await getSiteSetting("hero_banner_url");
+  await setSiteSetting("hero_banner_url", heroBannerUrl);
+
+  // Se mudou o banner, invalida cache da home
+  if (current !== heroBannerUrl) {
+    revalidatePath("/");
+  }
+
+  revalidatePath("/admin/configuracoes");
+  redirect("/admin/configuracoes");
+}

@@ -4,7 +4,7 @@ import { AdSlot } from "@/components/ad-slot";
 import { SiteShell } from "@/components/site-shell";
 import { listPublishedEvents, type EventRow } from "@/lib/events";
 import { EventSearch } from "@/components/event-search";
-import { HERO_BANNER_URL } from "@/lib/site";
+import { getHeroBannerUrl } from "@/lib/site";
 
 export const revalidate = 3600;
 
@@ -29,14 +29,17 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const events = await listPublishedEvents();
+  const [events, heroBannerUrl] = await Promise.all([
+    listPublishedEvents(),
+    getHeroBannerUrl(),
+  ]);
 
   return (
     <SiteShell>
-      {HERO_BANNER_URL && (
+      {heroBannerUrl && (
         <section className="hero-banner" aria-label="Banner principal">
           <Image
-            src={HERO_BANNER_URL}
+            src={heroBannerUrl}
             alt=""
             fill
             priority
