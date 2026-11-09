@@ -243,9 +243,18 @@ export async function updateSettingsAction(
 
   const heroBannerUrl = String(form.get("hero_banner_url") ?? "").trim();
   const aboutContent = String(form.get("about_content") ?? "").trim();
+  const youtubeIconUrl = String(form.get("youtube_icon_url") ?? "").trim();
+  const instagramIconUrl = String(form.get("instagram_icon_url") ?? "").trim();
+  const whatsappIconUrl = String(form.get("whatsapp_icon_url") ?? "").trim();
 
   if (heroBannerUrl && !/^https?:\/\//i.test(heroBannerUrl)) {
     errors.hero_banner_url = "A URL do banner deve ser um link válido (começar com http:// ou https://).";
+  }
+
+  for (const [key, url] of Object.entries({ youtube_icon_url: youtubeIconUrl, instagram_icon_url: instagramIconUrl, whatsapp_icon_url: whatsappIconUrl })) {
+    if (url && !/^https?:\/\//i.test(url)) {
+      errors[key] = "A URL do ícone deve ser um link válido (começar com http:// ou https://).";
+    }
   }
 
   if (aboutContent.length > 10000) {
@@ -258,12 +267,16 @@ export async function updateSettingsAction(
   const currentBanner = await getSiteSetting("hero_banner_url");
   await setSiteSetting("hero_banner_url", heroBannerUrl);
   await setSiteSetting("about_content", aboutContent);
+  await setSiteSetting("youtube_icon_url", youtubeIconUrl);
+  await setSiteSetting("instagram_icon_url", instagramIconUrl);
+  await setSiteSetting("whatsapp_icon_url", whatsappIconUrl);
 
   // Se mudou o banner, invalida cache da home
   if (currentBanner !== heroBannerUrl) {
     revalidatePath("/");
   }
-  // Se mudou o conteúdo sobre, invalida cache da página sobre
+  // Se mudou ícones ou conteúdo, invalida cache de todas as páginas (header está em todas)
+  revalidatePath("/");
   revalidatePath("/sobre");
 
   revalidatePath("/admin/configuracoes");

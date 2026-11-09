@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SiteShell } from "@/components/site-shell";
 import { WHATSAPP_URL } from "@/lib/site";
+import { getSocialIcons } from "@/lib/events";
 
 export const metadata: Metadata = {
   title: "Privacidade",
@@ -8,9 +9,11 @@ export const metadata: Metadata = {
   alternates: { canonical: "/privacidade" },
 };
 
-export default function PrivacyPage() {
+export default async function PrivacyPage() {
+  const socialIcons = await getSocialIcons();
+
   return (
-    <SiteShell>
+    <SiteShell customIcons={socialIcons}>
       <article className="container narrow text-page">
         <h1>Privacidade</h1>
         <p className="event-meta">Atualizado em novembro de 2026.</p>

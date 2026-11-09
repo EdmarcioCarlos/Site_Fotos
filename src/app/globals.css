@@ -229,6 +229,14 @@ h3 {
   outline-offset: 2px;
 }
 
+/* Ícones personalizados (imagens) */
+.custom-social-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
 .contact-list {
   display: flex;
   flex-wrap: wrap;

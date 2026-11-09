@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AdSlot } from "@/components/ad-slot";
 import { SiteShell } from "@/components/site-shell";
-import { getPublishedEventBySlug, type EventRow } from "@/lib/events";
+import { getPublishedEventBySlug, getSocialIcons, type EventRow } from "@/lib/events";
 import { formatEventDate } from "@/lib/format";
 import { directionsUrl, locationQuery, mapEmbedUrl } from "@/lib/maps";
 import { SITE_URL } from "@/lib/site";
@@ -52,14 +52,17 @@ function eventJsonLd(event: EventRow, place: string): string {
 }
 
 export default async function EventPage({ params }: Props) {
-  const event = await getPublishedEventBySlug((await params).slug);
+  const [event, socialIcons] = await Promise.all([
+    getPublishedEventBySlug((await params).slug),
+    getSocialIcons(),
+  ]);
   if (!event) notFound();
 
   const place = locationQuery(event.address, event.city);
   const mapUrl = mapEmbedUrl(place);
 
   return (
-    <SiteShell>
+    <SiteShell customIcons={socialIcons}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: eventJsonLd(event, place) }}

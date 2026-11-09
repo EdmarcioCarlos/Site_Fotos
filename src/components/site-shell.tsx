@@ -1,8 +1,19 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { HIRE_URL, INSTAGRAM_URL, WHATSAPP_URL, YOUTUBE_URL } from "@/lib/site";
 
-function SocialIcon({ href, label, children }: { href: string; label: string; children: React.ReactNode }) {
+interface SiteShellProps {
+  children: React.ReactNode;
+  customIcons?: {
+    youtube?: string;
+    instagram?: string;
+    whatsapp?: string;
+  };
+}
+
+function SocialIcon({ href, label, children, customSrc }: { href: string; label: string; children: React.ReactNode; customSrc?: string }) {
   return (
     <a
       className="social-icon"
@@ -11,7 +22,11 @@ function SocialIcon({ href, label, children }: { href: string; label: string; ch
       rel="noopener noreferrer"
       aria-label={label}
     >
-      {children}
+      {customSrc ? (
+        <Image src={customSrc} alt="" width={24} height={24} className="custom-social-icon" />
+      ) : (
+        children
+      )}
     </a>
   );
 }
@@ -43,7 +58,7 @@ function WhatsAppIcon() {
   );
 }
 
-export function SiteShell({ children }: { children: React.ReactNode }) {
+export function SiteShell({ children, customIcons }: SiteShellProps) {
   return (
     <>
       <header className="site-header">
@@ -53,13 +68,13 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           </Link>
           <div className="header-actions">
             <div className="social-links">
-              <SocialIcon href={YOUTUBE_URL} label="YouTube">
+              <SocialIcon href={YOUTUBE_URL} label="YouTube" customSrc={customIcons?.youtube}>
                 <YouTubeIcon />
               </SocialIcon>
-              <SocialIcon href={INSTAGRAM_URL} label="Instagram">
+              <SocialIcon href={INSTAGRAM_URL} label="Instagram" customSrc={customIcons?.instagram}>
                 <InstagramIcon />
               </SocialIcon>
-              <SocialIcon href={WHATSAPP_URL} label="WhatsApp">
+              <SocialIcon href={WHATSAPP_URL} label="WhatsApp" customSrc={customIcons?.whatsapp}>
                 <WhatsAppIcon />
               </SocialIcon>
             </div>

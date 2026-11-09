@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { AdSlot } from "@/components/ad-slot";
 import { SiteShell } from "@/components/site-shell";
-import { listPublishedEvents, listCategories, type EventRow, type CategoryRow } from "@/lib/events";
+import { listPublishedEvents, listCategories, getSocialIcons, type EventRow, type CategoryRow } from "@/lib/events";
 import { EventSearch } from "@/components/event-search";
 import { getHeroBannerUrl } from "@/lib/site";
 
@@ -29,14 +29,15 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const [events, categories, heroBannerUrl] = await Promise.all([
+  const [events, categories, heroBannerUrl, socialIcons] = await Promise.all([
     listPublishedEvents(),
     listCategories(),
     getHeroBannerUrl(),
+    getSocialIcons(),
   ]);
 
   return (
-    <SiteShell>
+    <SiteShell customIcons={socialIcons}>
       {heroBannerUrl && (
         <section className="hero-banner" aria-label="Banner principal">
           <Image

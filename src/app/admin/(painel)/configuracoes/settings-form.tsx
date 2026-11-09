@@ -7,7 +7,13 @@ import type { SiteSetting } from "@/lib/events";
 
 const HERO_BANNER_KEY = "hero_banner_url";
 const ABOUT_CONTENT_KEY = "about_content";
+const ICON_KEYS = {
+  youtube: "youtube_icon_url",
+  instagram: "instagram_icon_url",
+  whatsapp: "whatsapp_icon_url",
+} as const;
 const MAX_BANNER_MB = 10;
+const MAX_ICON_MB = 1;
 
 type SettingsFormState = { errors?: Record<string, string> };
 type Props = { initialSettings: SiteSetting[]; action: (state: SettingsFormState, form: FormData) => Promise<SettingsFormState> };
@@ -17,7 +23,12 @@ export function SettingsForm({ initialSettings, action }: Props) {
   const settingsMap = new Map(initialSettings.map((s) => [s.key, s.value]));
   const [heroBannerUrl, setHeroBannerUrl] = useState(settingsMap.get(HERO_BANNER_KEY) ?? "");
   const [aboutContent, setAboutContent] = useState(settingsMap.get(ABOUT_CONTENT_KEY) ?? "");
-  const [uploading, setUploading] = useState(false);
+  const [iconUrls, setIconUrls] = useState<Record<string, string>>({
+    youtube: settingsMap.get(ICON_KEYS.youtube) ?? "",
+    instagram: settingsMap.get(ICON_KEYS.instagram) ?? "",
+    whatsapp: settingsMap.get(ICON_KEYS.whatsapp) ?? "",
+  });
+  const [uploading, setUploading] = useState<string | false>(false);
   const [uploadError, setUploadError] = useState("");
 
   async function handleHeroBanner(file: File | undefined) {
@@ -27,7 +38,7 @@ export function SettingsForm({ initialSettings, action }: Props) {
       setUploadError(`A imagem pode ter no máximo ${MAX_BANNER_MB} MB.`);
       return;
     }
-    setUploading(true);
+    setUploading("hero");
     try {
       const blob = await upload(`site/hero-banner-${Date.now()}.${file.name.split(".").pop()}`, file, {
         access: "public",
@@ -39,6 +50,70 @@ export function SettingsForm({ initialSettings, action }: Props) {
     } finally {
       setUploading(false);
     }
+  }
+
+  async function handleIconUpload(platform: keyof typeof ICON_KEYS, file: File | undefined) {
+    if (!file) return;
+    setUploadError("");
+    if (file.size > MAX_ICON_MB * 1024 * 1024) {
+      setUploadError(`O ícone pode ter no máximo ${MAX_ICON_MB} MB.`);
+      return;
+    }
+    if (!file.type.startsWith("image/")) {
+      setUploadError("O arquivo deve ser uma imagem (PNG, JPG, WebP, SVG).");
+      return;
+    }
+    setUploading(platform);
+    try {
+      const ext = file.name.split(".").pop() ?? "png";
+      const blob = await upload(`site/icon-${platform}-${Date.now()}.${ext}`, file, {
+        access: "public",
+        handleUploadUrl: "/api/admin/upload",
+      });
+      setIconUrls((prev) => ({ ...prev, [platform]: blob.url }));
+    } catch {
+      setUploadError("Não foi possível enviar o ícone. Tente novamente.");
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  function renderIconUpload(platform: keyof typeof ICON_KEYS, label: string) {
+    const url = iconUrls[platform];
+    const isUploading = uploading === platform;
+
+    return (
+      <div className="field">
+        <label htmlFor={`icon-${platform}`}>{label}</label>
+        {url && (
+          <div className="icon-preview-wrapper">
+            <img src={url} alt={`Pré-visualização do ícone ${label}`} className="icon-preview" />
+            <button
+              type="button"
+              className="icon-remove"
+              onClick={() => {
+                setIconUrls((prev) => ({ ...prev, [platform]: "" }));
+              }}
+              aria-label={`Remover ícone ${label}`}
+            >
+              ×
+            </button>
+          </div>
+        )}
+        <input
+          id={`icon-${platform}`}
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/svg+xml"
+          onChange={(e) => handleIconUpload(platform, e.target.files?.[0])}
+          disabled={!!uploading}
+        />
+        <p className="hint">PNG, JPG, WebP ou SVG de até {MAX_ICON_MB} MB. Recomendado: 24×24px, fundo transparente.</p>
+        <input type="hidden" name={ICON_KEYS[platform]} value={url} />
+        {isUploading && <p className="hint">Enviando ícone...</p>}
+        {uploadError && <p className="error">{uploadError}</p>}
+        {errors[ICON_KEYS[platform]] && <p className="error">{errors[ICON_KEYS[platform]]}</p>}
+      </div>
+    );
   }
 
   const errors = state.errors ?? {};
@@ -62,13 +137,31 @@ export function SettingsForm({ initialSettings, action }: Props) {
             type="file"
             accept="image/jpeg,image/png,image/webp"
             onChange={(e) => handleHeroBanner(e.target.files?.[0])}
-            disabled={!true} // uploadEnabled viria do contexto, simplificado por enquanto
+            disabled={!!uploading}
           />
           <p className="hint">JPG, PNG ou WebP de até {MAX_BANNER_MB} MB. Formato ideal: 1920 × 600 pixels (corte horizontal).</p>
           <input type="hidden" name="hero_banner_url" value={heroBannerUrl} />
-          {uploading && <p className="hint">Enviando imagem...</p>}
+          {uploading === "hero" && <p className="hint">Enviando imagem...</p>}
           {uploadError && <p className="error">{uploadError}</p>}
           {errors.hero_banner_url && <p className="error">{errors.hero_banner_url}</p>}
+        </div>
+      </section>
+
+      <section className="settings-section">
+        <h2>Ícones das Redes Sociais (Header)</h2>
+        <p className="hint">Envie imagens personalizadas para substituir os ícones padrão. Deixe vazio para usar os ícones padrão (SVG).</p>
+
+        {renderIconUpload("youtube", "YouTube")}
+        {renderIconUpload("instagram", "Instagram")}
+        {renderIconUpload("whatsapp", "WhatsApp")}
+
+        <div className="admin-actions">
+          <button type="submit" className="button button-primary" disabled={pending || !!uploading}>
+            {pending ? "Salvando..." : "Salvar configurações"}
+          </button>
+          <Link href="/admin" className="button">
+            Cancelar
+          </Link>
         </div>
       </section>
 
@@ -87,15 +180,6 @@ export function SettingsForm({ initialSettings, action }: Props) {
             className="field-textarea"
           />
           {errors.about_content && <p className="error">{errors.about_content}</p>}
-        </div>
-
-        <div className="admin-actions">
-          <button type="submit" className="button button-primary" disabled={pending || uploading}>
-            {pending ? "Salvando..." : "Salvar configurações"}
-          </button>
-          <Link href="/admin" className="button">
-            Cancelar
-          </Link>
         </div>
       </section>
     </form>

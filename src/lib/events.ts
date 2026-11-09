@@ -212,3 +212,16 @@ export async function setSiteSetting(key: string, value: string): Promise<void> 
 export async function listSiteSettings(): Promise<SiteSetting[]> {
   return query<SiteSetting>(`SELECT key, value, updated_at FROM site_settings ORDER BY key`);
 }
+
+export async function getSocialIcons(): Promise<{ youtube?: string; instagram?: string; whatsapp?: string }> {
+  const rows = await query<SiteSetting>(
+    `SELECT key, value FROM site_settings WHERE key IN ('youtube_icon_url', 'instagram_icon_url', 'whatsapp_icon_url')`
+  );
+  const result: { youtube?: string; instagram?: string; whatsapp?: string } = {};
+  for (const row of rows) {
+    if (row.key === 'youtube_icon_url') result.youtube = row.value;
+    else if (row.key === 'instagram_icon_url') result.instagram = row.value;
+    else if (row.key === 'whatsapp_icon_url') result.whatsapp = row.value;
+  }
+  return result;
+}

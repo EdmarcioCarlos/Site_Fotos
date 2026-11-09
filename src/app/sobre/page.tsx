@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { SiteShell } from "@/components/site-shell";
 import { HIRE_URL } from "@/lib/site";
-import { getSiteSetting } from "@/lib/events";
+import { getSiteSetting, getSocialIcons } from "@/lib/events";
 
 export const metadata: Metadata = {
   title: "Sobre",
@@ -11,7 +11,10 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
-  const aboutContent = await getSiteSetting("about_content");
+  const [aboutContent, socialIcons] = await Promise.all([
+    getSiteSetting("about_content"),
+    getSocialIcons(),
+  ]);
 
   // Conteúdo padrão caso não tenha nada configurado
   const defaultContent = `
@@ -64,7 +67,7 @@ Vai organizar um evento? Envie a data, o local e o tipo de cobertura que você p
   }
 
   return (
-    <SiteShell>
+    <SiteShell customIcons={socialIcons}>
       <article className="container narrow text-page">
         <h1>Sobre a PhotoPRO</h1>
         {renderContent(aboutContent || defaultContent)}
