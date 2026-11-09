@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import type { EventRow } from "@/lib/events";
 import { formatEventDate } from "@/lib/format";
@@ -82,7 +81,7 @@ export function EventSearch({ initialEvents }: EventSearchProps) {
           <ul className="event-grid" role="list">
             {displayEvents.map((event, index) => (
               <li key={event.id}>
-                <Link href={`/eventos/${event.slug}`} className="event-card">
+                <a href={event.sales_url} target="_blank" rel="noopener noreferrer" className="event-card">
                   <div className="banner">
                     <Image
                       src={event.banner_url}
@@ -98,7 +97,7 @@ export function EventSearch({ initialEvents }: EventSearchProps) {
                       {event.city} · {formatEventDate(event.event_date)}
                     </p>
                   </div>
-                </Link>
+                </a>
               </li>
             ))}
           </ul>
@@ -106,7 +105,7 @@ export function EventSearch({ initialEvents }: EventSearchProps) {
             <ul className="event-grid" role="list">
               {moreEvents.map((event) => (
                 <li key={event.id}>
-                  <Link href={`/eventos/${event.slug}`} className="event-card">
+                  <a href={event.sales_url} target="_blank" rel="noopener noreferrer" className="event-card">
                     <div className="banner">
                       <Image
                         src={event.banner_url}
@@ -121,7 +120,7 @@ export function EventSearch({ initialEvents }: EventSearchProps) {
                         {event.city} · {formatEventDate(event.event_date)}
                       </p>
                     </div>
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
