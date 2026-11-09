@@ -6,6 +6,7 @@ import Link from "next/link";
 import type { SiteSetting } from "@/lib/events";
 
 const HERO_BANNER_KEY = "hero_banner_url";
+const ABOUT_CONTENT_KEY = "about_content";
 const MAX_BANNER_MB = 10;
 
 type SettingsFormState = { errors?: Record<string, string> };
@@ -15,6 +16,7 @@ export function SettingsForm({ initialSettings, action }: Props) {
   const [state, formAction, pending] = useActionState(action, { errors: {} });
   const settingsMap = new Map(initialSettings.map((s) => [s.key, s.value]));
   const [heroBannerUrl, setHeroBannerUrl] = useState(settingsMap.get(HERO_BANNER_KEY) ?? "");
+  const [aboutContent, setAboutContent] = useState(settingsMap.get(ABOUT_CONTENT_KEY) ?? "");
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
 
@@ -67,6 +69,24 @@ export function SettingsForm({ initialSettings, action }: Props) {
           {uploading && <p className="hint">Enviando imagem...</p>}
           {uploadError && <p className="error">{uploadError}</p>}
           {errors.hero_banner_url && <p className="error">{errors.hero_banner_url}</p>}
+        </div>
+      </section>
+
+      <section className="settings-section">
+        <h2>Conteúdo da Página "Sobre"</h2>
+        <p className="hint">Texto que aparece na página /sobre. Use quebras de linha para parágrafos.</p>
+
+        <div className="field">
+          <label htmlFor="aboutContent">Sobre a PhotoPRO</label>
+          <textarea
+            id="aboutContent"
+            name="about_content"
+            value={aboutContent}
+            onChange={(e) => setAboutContent(e.target.value)}
+            rows={12}
+            className="field-textarea"
+          />
+          {errors.about_content && <p className="error">{errors.about_content}</p>}
         </div>
 
         <div className="admin-actions">

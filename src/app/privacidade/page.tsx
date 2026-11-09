@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { SiteShell } from "@/components/site-shell";
-import { CONTACT_EMAIL } from "@/lib/site";
+import { WHATSAPP_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Privacidade",
@@ -33,7 +33,7 @@ export default function PrivacyPage() {
             recebe dados da conexão de acordo com as próprias regras.
           </li>
           <li>
-            <strong>Site de venda:</strong> ao tocar em &quot;Ver e comprar fotos&quot;, você vai para
+            <strong>Site de venda:</strong> ao tocar em "Ver e comprar fotos", você vai para
             outro site, que tem a própria política de privacidade.
           </li>
         </ul>
@@ -48,7 +48,7 @@ export default function PrivacyPage() {
         <h2 className="section-title">Fotos e seus direitos</h2>
         <p>
           Para falar sobre os seus dados, pedir a retirada de uma imagem deste site ou tirar dúvidas,
-          escreva para <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+          entre em contato pelo <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">WhatsApp</a>.
         </p>
       </article>
     </SiteShell>

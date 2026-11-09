@@ -242,21 +242,29 @@ export async function updateSettingsAction(
   const errors: Record<string, string> = {};
 
   const heroBannerUrl = String(form.get("hero_banner_url") ?? "").trim();
+  const aboutContent = String(form.get("about_content") ?? "").trim();
 
   if (heroBannerUrl && !/^https?:\/\//i.test(heroBannerUrl)) {
     errors.hero_banner_url = "A URL do banner deve ser um link válido (começar com http:// ou https://).";
   }
 
+  if (aboutContent.length > 10000) {
+    errors.about_content = "O conteúdo é muito longo (máx. 10.000 caracteres).";
+  }
+
   if (Object.keys(errors).length > 0) return { errors };
 
   const { setSiteSetting, getSiteSetting } = await import("@/lib/events");
-  const current = await getSiteSetting("hero_banner_url");
+  const currentBanner = await getSiteSetting("hero_banner_url");
   await setSiteSetting("hero_banner_url", heroBannerUrl);
+  await setSiteSetting("about_content", aboutContent);
 
   // Se mudou o banner, invalida cache da home
-  if (current !== heroBannerUrl) {
+  if (currentBanner !== heroBannerUrl) {
     revalidatePath("/");
   }
+  // Se mudou o conteúdo sobre, invalida cache da página sobre
+  revalidatePath("/sobre");
 
   revalidatePath("/admin/configuracoes");
   redirect("/admin/configuracoes");
