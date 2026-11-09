@@ -138,7 +138,7 @@ export function EventSearch({ initialEvents }: EventSearchProps) {
                     rel="noopener noreferrer"
                     className="button button-primary button-small buy-button"
                   >
-                    COMPRAR FOTOS
+                    VEJA AS FOTOS
                   </a>
                 </li>
               ))}
