@@ -9,8 +9,7 @@ export const revalidate = 3600;
 
 const EVENTS_BEFORE_AD = 6;
 // Com poucos eventos a página tem pouco conteúdo, e o Google não permite anúncios nesses casos.
-// Mude para 3 em produção (política do AdSense). 0 = sempre mostra para teste.
-const MIN_EVENTS_FOR_AD = 0;
+const MIN_EVENTS_FOR_AD = 3;
 
 export async function generateMetadata(): Promise<Metadata> {
   const { listPublishedEvents } = await import("@/lib/events");
