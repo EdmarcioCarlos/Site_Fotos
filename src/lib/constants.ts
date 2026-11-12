@@ -1,6 +1,4 @@
-export const SITE_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
-  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-  : "http://localhost:3000";
+export const SITE_URL = "https://www.photopro.pro";
 
 export const WHATSAPP_URL = "https://wa.me/553191248114";
 export const HIRE_URL = WHATSAPP_URL;
