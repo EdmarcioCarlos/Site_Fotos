@@ -1,6 +1,5 @@
 "use client";
 
-import { upload } from "@vercel/blob/client";
 import Link from "next/link";
 import { useActionState, useEffect, useState } from "react";
 import type { EventRow, CategoryRow } from "@/lib/events";
@@ -17,6 +16,23 @@ type Props = {
   categories: CategoryRow[];
   uploadEnabled: boolean;
 };
+
+async function uploadToServer(file: File, pathPrefix: string): Promise<string> {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("pathPrefix", pathPrefix);
+
+  const res = await fetch("/api/admin/upload", {
+    method: "POST",
+    body: formData,
+  });
+
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error || "Falha no upload");
+  }
+  return data.url;
+}
 
 export function EventForm({ action, event, categories, uploadEnabled }: Props) {
   const [state, formAction, pending] = useActionState(action, initialState);
@@ -50,13 +66,10 @@ export function EventForm({ action, event, categories, uploadEnabled }: Props) {
     }
     setUploading(true);
     try {
-      const blob = await upload(`banners/${file.name}`, file, {
-        access: "public",
-        handleUploadUrl: "/api/admin/upload",
-      });
-      setBannerUrl(blob.url);
-    } catch {
-      setUploadError("Não foi possível enviar a imagem. Use JPG, PNG ou WebP e tente de novo.");
+      const url = await uploadToServer(file, "banners/");
+      setBannerUrl(url);
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : "Não foi possível enviar a imagem. Use JPG, PNG ou WebP e tente de novo.");
     } finally {
       setUploading(false);
     }

@@ -1,7 +1,6 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { upload } from "@vercel/blob/client";
 import Link from "next/link";
 import type { SiteSetting } from "@/lib/events";
 
@@ -17,6 +16,23 @@ const MAX_ICON_MB = 1;
 
 type SettingsFormState = { errors?: Record<string, string> };
 type Props = { initialSettings: SiteSetting[]; action: (state: SettingsFormState, form: FormData) => Promise<SettingsFormState> };
+
+async function uploadToServer(file: File, pathPrefix: string): Promise<string> {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("pathPrefix", pathPrefix);
+
+  const res = await fetch("/api/admin/upload", {
+    method: "POST",
+    body: formData,
+  });
+
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error || "Falha no upload");
+  }
+  return data.url;
+}
 
 export function SettingsForm({ initialSettings, action }: Props) {
   const [state, formAction, pending] = useActionState(action, { errors: {} });
@@ -40,13 +56,10 @@ export function SettingsForm({ initialSettings, action }: Props) {
     }
     setUploading("hero");
     try {
-      const blob = await upload(`site/hero-banner-${Date.now()}.${file.name.split(".").pop()}`, file, {
-        access: "public",
-        handleUploadUrl: "/api/admin/upload",
-      });
-      setHeroBannerUrl(blob.url);
-    } catch {
-      setUploadError("Não foi possível enviar a imagem. Use JPG, PNG ou WebP e tente de novo.");
+      const url = await uploadToServer(file, "site/");
+      setHeroBannerUrl(url);
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : "Não foi possível enviar a imagem. Use JPG, PNG ou WebP e tente de novo.");
     } finally {
       setUploading(false);
     }
@@ -65,14 +78,10 @@ export function SettingsForm({ initialSettings, action }: Props) {
     }
     setUploading(platform);
     try {
-      const ext = file.name.split(".").pop() ?? "png";
-      const blob = await upload(`site/icon-${platform}-${Date.now()}.${ext}`, file, {
-        access: "public",
-        handleUploadUrl: "/api/admin/upload",
-      });
-      setIconUrls((prev) => ({ ...prev, [platform]: blob.url }));
-    } catch {
-      setUploadError("Não foi possível enviar o ícone. Tente novamente.");
+      const url = await uploadToServer(file, "site/");
+      setIconUrls((prev) => ({ ...prev, [platform]: url }));
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : "Não foi possível enviar o ícone. Tente novamente.");
     } finally {
       setUploading(false);
     }
